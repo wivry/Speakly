@@ -1,36 +1,41 @@
 import React, { useState, useEffect } from "react";
 
-function AddPerson(props) {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [sendWarning, setSendWarning] = useState(false);
+const ALERT_TIMER = 5; // doba zobrazení Alertu v sekundách
 
+function AddPerson(props) {
+  const [firstName, setFirstName] = useState(""); // křesní jméno
+  const [lastName, setLastName] = useState(""); // příjmení
+  const [sendWarning, setSendWarning] = useState(false); // true - zobrazí alert o vyplnění údajů
+
+  // zmáčknuto tlačítko na odeslání nahrávek na server
   const buttonPressedSend = () => {
     if (firstName === "" || lastName === "") {
-      setSendWarning(true);
+      // pokud nejsou vyplněna pole jména
+      setSendWarning(true); // zobrazí alert o vyplnění údajů
     } else {
+      // předání informací vyšší komponentě
       props.addPersonInfo({
         firstName: firstName,
         lastName: lastName,
       });
-      setSendWarning(false);
-      setFirstName("");
+      setSendWarning(false); // trigruje alert přes useEffect
+      setFirstName(""); // smazání údajů v této komponentě
       setLastName("");
     }
   };
 
+  // zobrazení Alertu a automatické smazání alertu po 5s
   useEffect(() => {
     if (sendWarning) {
-      // Můžete upravit čas na zobrazení alertu podle potřeby
       const timeout = setTimeout(() => {
         setSendWarning(false);
-      }, 5000); // Alert zmizí po 3 sekundách
-
+      }, 1000 * ALERT_TIMER); // Alert zmizí po 5 sekundách
       // Zrušení timeoutu, pokud komponenta je odstraněna před uplynutím timeoutu
       return () => clearTimeout(timeout);
     }
   }, [sendWarning]);
 
+  // vykreslení komponenty
   return (
     <div className="shadow-lg custom-card mb-5">
       <div className="row mt-3">

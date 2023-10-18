@@ -1,14 +1,16 @@
 import RecordVoice from "./RecordVoice";
 import AddPerson from "./AddPerson";
-import GoToHomePage from "./GoToHomePage";
+import GoTo from "./GoTo";
 
 import React, { useState, useEffect } from "react";
+
+const ALERT_TIMER = 8; // doba zobrazení Alertu v sekundách
 
 function NewRecord(props) {
   const [showAddPerson, setShowAddPerson] = useState(0); // 0 = žádná nahravka, číslo = index nahrávky
   const [personAdded, setPersonAdded] = useState(false); // nastaveno do true po úspěšném přidání osoby do databáze
-  const [selectedRecordings, setSelectedRecordings] = useState([]);
-  const [uploadRecordsID, setUploadRecordsID] = useState(0);
+  const [selectedRecordings, setSelectedRecordings] = useState([]); // URL vybrané nahrávky k odeslání
+  const [uploadRecordsID, setUploadRecordsID] = useState(0); // ID zápisu v databázi, které vrátí server
 
   const recordVoiceRef = React.createRef(); // reference na volání resetu
 
@@ -17,79 +19,53 @@ function NewRecord(props) {
     recordVoiceRef.current.resetRecordVoice();
   };
 
+  // tlačítko Select zmáčknuto - vibírá se jaká nahrávka bude odeslaná
   const buttonPressedSelect = (index, rec) => {
     setShowAddPerson(index); // 0 = žádná nahravka, číslo = index nahrávky
     setSelectedRecordings(rec);
   };
 
   const uploadRecording = async (name, blobUrl) => {
-    const responseBlob = await fetch(blobUrl);
-    const blob = await responseBlob.blob();
-
-    const formData = new FormData();
-    formData.append("first_name", name.firstName);
-    formData.append("last_name", name.lastName);
-    formData.append("record_number", showAddPerson);
-    formData.append("recorded_file", new File([blob], "recording.mp3"));
-
-    // JSON.stringify({first_name: name.firstName,last_name: name.lastName,record_number: showAddPerson,})
-    //headers: { "Content-Type": "application/json" },
-
-    const requestOptions = {
-      method: "POST",
-      body: formData,
-    };
-
-    const response = await fetch("/api/create-record", requestOptions);
-    if (response.status === 201) {
-      const data = await response.json();
-      console.log("Nahrávka byla úspěšně nahrána:", data);
-      setUploadRecordsID(data.id);
-      // Nahrávka byla úspěšně uložena
-      setPersonAdded(true); // osoba úspěšně přidaná
-    }
-  };
-
-  const uploadRecordingOld = async (blobUrl) => {
-    console.log(blobUrl);
     try {
-      const response = await fetch(blobUrl);
-      if (!response.ok) {
-        throw new Error("Nahrávání selhalo");
+      // vytvoření blobu obsahující nahrávku z URL blobu
+      const responseBlob = await fetch(blobUrl);
+      if (!responseBlob.ok) {
+        throw new Error("Nahrávání blobu z blobURL selhalo"); // pokud nelze vytvořit blob - error
       }
-      const blob = await response.blob();
-      // Zde máte nahrávaný soubor jako blob, který můžete odeslat na server
-      // Vytvořte FormData objekt a přidejte blob soubor do formuláře
+      const blob = await responseBlob.blob();
+      // příprava odesílaných dat do proměnné formData
       const formData = new FormData();
-      //const file = new File([blob], "filename.mp3", { type: blob.type });
-      //file.src = blobUrl;
-
-      //formData.append("file[]", blobUrl, "record.mp3");
-      formData.append("audio", blob, "filename.mp3");
+      formData.append("first_name", name.firstName);
+      formData.append("last_name", name.lastName);
+      formData.append("record_number", showAddPerson);
+      formData.append("recorded_file", new File([blob], "recording.mp3"));
+      // příprava formátu zprávy s odesílanými daty
+      const requestOptions = {
+        method: "POST",
+        body: formData,
+      };
 
       try {
-        const uploadResponse = await fetch("http://localhost:8000/audio/", {
-          method: "POST",
-          body: formData,
-        });
-
-        if (uploadResponse.status === 201) {
-          const data = await uploadResponse.json();
+        // odesílání nahrávky na api serveru
+        const response = await fetch("/api/create-record", requestOptions);
+        if (response.status === 201) {
+          // pokud zápis do databáze byl vytvořen
+          const data = await response.json();
           console.log("Nahrávka byla úspěšně nahrána:", data);
+          setUploadRecordsID(data.id);
           // Nahrávka byla úspěšně uložena
-          //resetRecordVoice(); //resetování RecordVoice
-          setPersonAdded(true); // osoba úspěšně přidaná
+          setPersonAdded(true); // osoba úspěšně přidaná (v useEffect se tímto triggerem i resetuje component recordVoice)
         } else {
-          // Zpracování chyby
-          throw new Error("Nahrávání selhalo");
+          // Zpracování chyby v databázi
+          throw new Error("Ukládání do databáze selhalo");
         }
       } catch (error) {
         // Chyba komunikace
-        console.log("chyba komunikace");
+        console.log("chyba v komunikaci se serverem");
         throw new Error(error);
       }
     } catch (error) {
-      console.error("Chyba při nahrávání:", error);
+      console.error("Chyba při uploadu na server:", error);
     }
   };
 
@@ -100,13 +76,13 @@ function NewRecord(props) {
     setShowAddPerson(0); // již není třeba zobrazovat rozhraní pro přidání do databáze
   };
 
-  // při změně personAdded je volán tento effect, který zobrazí na 5s alert se statusem přidání nahrávky
+  // při změně personAdded je volán tento effect, který zobrazí na 8s alert se statusem přidání nahrávky
   useEffect(() => {
     if (personAdded) {
       resetRecordVoice(); //resetování RecordVoice
       const timeout = setTimeout(() => {
         setPersonAdded(false);
-      }, 8000); // Alert zmizí po 8 sekundách (personAdded se vrátí ndo stavu FALSE)
+      }, 1000 * ALERT_TIMER); // Alert zmizí po 8 sekundách (personAdded se vrátí ndo stavu FALSE)
       // Zrušení timeoutu, pokud komponenta je odstraněna před uplynutím timeoutu
       return () => clearTimeout(timeout);
     }
@@ -115,7 +91,9 @@ function NewRecord(props) {
   // vykreslení komponenty
   return (
     <div>
-      <GoToHomePage />
+      <GoTo
+        GoToPage={{ name: "Go Back To Home Page", href: "/", blue: false }}
+      />
       <div className="mt-4">
         <div className="shadow-lg custom-card">
           <div className="row mt-3">

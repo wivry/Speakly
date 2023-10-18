@@ -31,3 +31,5 @@ git init
 git add .
 git commit -m "První commit: Obsah adresáře"
 git remote add origin https://github.com/wivry/Speakly
+git branch -M main  # Změňte jméno větve podle vašich potřeb
+git push -u -f origin main

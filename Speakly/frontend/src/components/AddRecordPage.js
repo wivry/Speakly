@@ -1,6 +1,7 @@
 import React from "react";
 import NewRecord from "./NewRecord";
 
+// komponent vykreslující stránku pro nahrávání nových zápisů do databáze
 function AddRecordPage() {
   return (
     <div className="container custom-container">

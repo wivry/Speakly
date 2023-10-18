@@ -3,10 +3,12 @@ import vmsg from "vmsg";
 
 const MAX_RECORDINGS = 10; // maximální množství nahrávek
 
+// odkaz na VMSG recorder nahrávek
 const recorder = new vmsg.Recorder({
   wasmURL: "https://unpkg.com/vmsg@0.3.0/vmsg.wasm",
 });
 
+// vlastní třída pro nahrávání
 class RecordVoice extends React.Component {
   constructor(props) {
     super(props);
@@ -37,7 +39,9 @@ class RecordVoice extends React.Component {
     this.setState({ selectedAudio: 0 });
 
     if (this.state.isRecording) {
+      // pokud již nahrávání běží, zastav ho
       const blob = await recorder.stopRecording();
+      // uložení stavů nahrávání
       this.setState({
         isLoading: false,
         isRecording: false,
@@ -45,6 +49,7 @@ class RecordVoice extends React.Component {
         recordings: this.state.recordings.concat(URL.createObjectURL(blob)),
       });
     } else {
+      // pokud ještě recorder neběží, začni nahrávat
       try {
         await recorder.initAudio();
         await recorder.initWorker();
@@ -62,6 +67,7 @@ class RecordVoice extends React.Component {
   // Funkce pro odstranění nahrávky z pole a aktualizaci stavu komponenty
   deleteAudio = (index) => {
     if (!this.state.isLoading || !this.state.isRecording) {
+      // pouze pokud recorder neběží
       const updatedRecordings = [...this.state.recordings];
       updatedRecordings.splice(index, 1);
       this.setState({ recordings: updatedRecordings });
@@ -71,7 +77,8 @@ class RecordVoice extends React.Component {
   // předá index zvolené nahravky do vyšší komponenty
   sendAudio = (index) => {
     if (!this.state.isLoading || !this.state.isRecording) {
-      this.props.newRecordIsDone(index + 1, this.state.recordings[index]);
+      // pouze pokud recorder neběží
+      this.props.newRecordIsDone(index + 1, this.state.recordings[index]); // zde předá vyšší komponentě
       this.setState({ selectedAudio: index + 1 });
     }
   };
