@@ -10,7 +10,7 @@ Toto jsou moje poznámky k projektu Webové aplikace na rozpoznání řečníka.
   (3.11.5)
 
 ```bash
-- python --version
+python --version
 ```
 
 - Stáhnout repozitář z GitHubu
@@ -25,13 +25,15 @@ pip freeze > requirements.txt # vytvoření požadavků pro virtuální prostře
 pip install -r requirements.txt # instalace balíčků
 ```
 
-• Windows:
+aktivace virtuálního prostředí
+
+- Windows:
 
 ```bash
-myenv\Scripts\activate # aktivace virtuálního prostředí
+myenv\Scripts\activate
 ```
 
-• macOS a Linux:
+- macOS a Linux:
 
 ```bash
 source myenv/bin/activate
@@ -58,17 +60,21 @@ npm run build # spustí build verzi
 
 ### Django část
 
-• Windows:
+aktivace virtuálního prostředí
+
+- Windows:
 
 ```bash
-myenv\Scripts\activate # aktivace virtuálního prostředí
+myenv\Scripts\activate
 ```
 
-• macOS a Linux:
+- macOS a Linux:
 
 ```bash
 source myenv/bin/activate
 ```
+
+Jít do spožky aplikace serveru
 
 ```bash
 cd Speakly
@@ -89,13 +95,26 @@ CORS_ALLOWED_ORIGINS = [
 ```bash
 python manage.py makemigrations # jen pokud předtím došlo ke změně v databázi
 python manage.py migrate # jen pokud předtím došlo ke změně v databázi
-python .\manage.py runserver # stustí server
+python .\manage.py runserver # spustí server
 ```
 
 ### React část
 
-• Windows: myenv\Scripts\activate # aktivace virtuálního prostředí
-• macOS a Linux: source myenv/bin/activate
+aktivace virtuálního prostředí
+
+- Windows:
+
+```bash
+myenv\Scripts\activate
+```
+
+- macOS a Linux:
+
+```bash
+source myenv/bin/activate
+```
+
+Jít do složky frontendu
 
 ```bash
 cd Speakly/frontend
@@ -184,11 +203,13 @@ git push -u -f origin main
 node -v
 ```
 
-ujištění že npm se nainstaloval spolu s node.js, pokud ne, tak je třeba ho nainstalovat
+ujištění, že npm se nainstaloval spolu s node.js, pokud ne, tak je třeba ho nainstalovat
 
 ```bash
 npm -v
 ```
+
+Jít do složky frontendu
 
 ```bash
 cd Speakly/frontend
