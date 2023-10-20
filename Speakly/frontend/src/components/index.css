@@ -13,9 +13,9 @@ code {
     monospace;
 }
 
-@media (min-width: 1500px) {
+@media (min-width: 1400px) {
   .custom-container {
-    max-width: 1400px;
+    max-width: 1100px !important;
   }
   .custom-font-size {
     font-size: 4.5rem;
@@ -24,9 +24,9 @@ code {
 
 .custom-card {
   border-radius: 70px; /* Nastavte požadovanou hodnotu zaoblení v pixelů */
-  padding: 70px;
-  padding-top: 50px;
-  padding-bottom: 50px;
+  padding: 50px;
+  padding-top: 35px;
+  padding-bottom: 30px;
   background-color: white;
 }
 
