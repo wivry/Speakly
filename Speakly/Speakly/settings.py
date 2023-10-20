@@ -27,7 +27,8 @@ SECRET_KEY = 'django-insecure-y_=7^=5yq2sovbq7d6x+jpi0%^-o_d51&lvr*3hf8@66&9h4!j
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = []      # zde musí být URL stránky
+#CORS_ALLOWED_ORIGINS = []
 
 
 # Application definition
@@ -126,6 +127,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 # Media settings (determines where images will be uploaded)
 
 MEDIA_URL = 'media/'
@@ -134,7 +137,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Cors (determines which urls can access your data. Only required for browser access)
 
-CORS_ALLOW_ALL_ORIGINS = True  # Not required, but convenient for testing
+#CORS_ALLOW_ALL_ORIGINS = True  # Not required, but convenient for testing
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

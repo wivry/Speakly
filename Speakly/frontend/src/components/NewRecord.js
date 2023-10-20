@@ -94,7 +94,7 @@ function NewRecord(props) {
       <GoTo
         GoToPage={{ name: "Go Back To Home Page", href: "/", blue: false }}
       />
-      <div className="mt-4">
+      <div className="mt-3">
         <div className="shadow-lg custom-card">
           <div className="row mt-3">
             <h4>Make a new record of a person</h4>
@@ -119,7 +119,7 @@ function NewRecord(props) {
       </div>
 
       {showAddPerson ? (
-        <div className="mt-5">
+        <div className="mt-4">
           <AddPerson
             addPersonInfo={addPersonToData}
             showAddPerson={showAddPerson}

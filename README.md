@@ -83,7 +83,8 @@ cd Speakly
 #############################################################################################
 
 ```bash
-v settings.py je DEBUG=true # pro vývojové prostředí , false pro deployment
+v settings.py je DEBUG=true # true pro vývojové prostředí , false pro deployment
+ALLOWED_HOSTS = []      # zde musí být URL stránky
 CORS_ALLOW_ALL_ORIGINS = True # při finále by mělo být na false, ale pozor na práva souborů
 CORS_ALLOWED_ORIGINS = [
 "http://localhost:3000", # Zde nastavte doménu vaší React aplikace
@@ -95,6 +96,7 @@ CORS_ALLOWED_ORIGINS = [
 ```bash
 python manage.py makemigrations # jen pokud předtím došlo ke změně v databázi
 python manage.py migrate # jen pokud předtím došlo ke změně v databázi
+python manage.py collectstatic  # nutno schromáždit všechny static files
 python .\manage.py runserver # spustí server
 ```
 
