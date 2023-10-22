@@ -124,12 +124,16 @@ npm run dev # spustí vývojářský režim
 npm run build # spustí build verzi
 ```
 
+Replace "production" with "development" in the following snippet of the webpack.config: plugins: [ new webpack.DefinePlugin({ "process.env": { // This has effect on the react lib size NODE_ENV: JSON.stringify("development"), }, }), ]
+
 ## Jak na git:
 
 ```bash
 git add .
 git commit -m "Popis"
-git push -u -f origin in_work
+git push -u origin in_work
+
+git checkout moje-vetev #přepnout na vetev
 
 git init
 git add .
@@ -196,7 +200,7 @@ git push -u -f origin main
   python manage.py migrate
 ```
 
-## Jak byl vytvoren React project:
+## Jak byl vytvořen React project:
 
 - instalace node.js (https://nodejs.org/).
   verze node (v18.18.0)
@@ -236,3 +240,90 @@ pip install django-cors-headers
 ```
 
 - If you get the following error: Conflicting values for 'process.env.NODE_ENV' Replace "production" with "development" in the following snippet of the webpack.config: plugins: [ new webpack.DefinePlugin({ "process.env": { // This has effect on the react lib size NODE_ENV: JSON.stringify("development"), }, }), ]
+
+# Na serveru Noel
+
+vavrinek@noel.fel.cvut.cz
+Vavrinek1
+
+ssh-keygen
+
+- v adresáři var/www/sredemo
+- virtuální prostředí - sreenv
+
+## Připojení na Apache
+
+- Nainstalování modulu "mod_wsgi"
+
+```bash
+sudo apt-get install libapache2-mod-wsgi
+```
+
+- Aktivovat v Apache wsgi mod (tam, kde je konfigurační soubor Apache):
+
+```bash
+sudo a2enmod wsgi
+
+```
+
+- V konfiguračním souboru Apache nutno nastavit wsgi a cestu k Django projektu na spouštění
+
+```bash
+WSGIDaemonProcess example.com python-home=/path/to/venv python-path=/path/to/mysite.com
+WSGIProcessGroup example.com
+WSGIScriptAlias /sredemo /path/to/mysite.com/mysite/wsgi.py
+```
+
+- Dále v konfiguračním souboru přidat přesměrování
+
+```bash
+<Directory /path/to/mysite.com/mysite>
+<Files wsgi.py>
+Require all granted
+</Files>
+</Directory>
+
+```
+
+- Možná bude třeba udělat i toto:
+
+```bash
+Alias /robots.txt /path/to/mysite.com/static/robots.txt
+Alias /favicon.ico /path/to/mysite.com/static/favicon.ico
+
+Alias /media/ /path/to/mysite.com/media/
+Alias /static/ /path/to/mysite.com/static/
+
+<Directory /path/to/mysite.com/static>
+Require all granted
+</Directory>
+
+<Directory /path/to/mysite.com/media>
+Require all granted
+</Directory>
+```
+
+- Po provedení změn nutno restartovat Apache
+
+```bash
+sudo systemctl restart apache2
+```
+
+### Fixing UnicodeEncodeError for file uploads
+
+If you get a UnicodeEncodeError when uploading or writing files with file names or content that contains non-ASCII characters, make sure Apache is configured to support UTF-8 encoding:
+
+```bash
+export LANG='en_US.UTF-8'
+export LC_ALL='en_US.UTF-8'
+```
+
+A common location to put this configuration is /etc/apache2/envvars.
+
+Alternatively, if you are using mod_wsgi daemon mode you can add lang and locale options to the WSGIDaemonProcess directive:
+
+```bash
+WSGIDaemonProcess example.com lang='en_US.UTF-8' locale='en_US.UTF-8'
+```
+
+See the Files section of the Unicode reference guide for details.
