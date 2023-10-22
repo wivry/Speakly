@@ -25,10 +25,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-y_=7^=5yq2sovbq7d6x+jpi0%^-o_d51&lvr*3hf8@66&9h4!j'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []      # zde musí být URL stránky
-#CORS_ALLOWED_ORIGINS = []
+ALLOWED_HOSTS = ["noel.fel.cvut.cz", "127.0.0.1"]      # zde musí být URL stránky
+CORS_ALLOWED_ORIGINS = ["https://noel.fel.cvut.cz", "https://127.0.0.1"]
 
 
 # Application definition
