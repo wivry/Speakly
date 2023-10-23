@@ -267,22 +267,29 @@ sudo a2enmod wsgi
 ```
 
 - V konfiguračním souboru Apache nutno nastavit wsgi a cestu k Django projektu na spouštění
-
-```bash
-WSGIDaemonProcess example.com python-home=/path/to/venv python-path=/path/to/mysite.com
-WSGIProcessGroup example.com
-WSGIScriptAlias /sredemo /path/to/mysite.com/mysite/wsgi.py
-```
-
 - Dále v konfiguračním souboru přidat přesměrování
 
 ```bash
-<Directory /path/to/mysite.com/mysite>
+WSGIDaemonProcess Speakly python-home=/home/www/sredemo/sreenv python-path=/home/www/sredemo/Speakly/Speakly
+WSGIProcessGroup Speakly
+WSGIScriptAlias /sredemo /home/www/sredemo/Speakly/Speakly/Speakly/wsgi.py
+
+<Directory /home/www/sredemo/Speakly/Speakly/Speakly>
 <Files wsgi.py>
 Require all granted
 </Files>
 </Directory>
 
+Alias /media/ /home/www/sredemo/Speakly/Speakly/media/
+Alias /static/ /home/www/sredemo/Speakly/Speakly/static/
+
+<Directory /home/www/sredemo/Speakly/Speakly/static>
+Require all granted
+</Directory>
+
+<Directory /home/www/sredemo/Speakly/Speakly/media>
+Require all granted
+</Directory>
 ```
 
 - Možná bude třeba udělat i toto:
@@ -290,17 +297,6 @@ Require all granted
 ```bash
 Alias /robots.txt /path/to/mysite.com/static/robots.txt
 Alias /favicon.ico /path/to/mysite.com/static/favicon.ico
-
-Alias /media/ /path/to/mysite.com/media/
-Alias /static/ /path/to/mysite.com/static/
-
-<Directory /path/to/mysite.com/static>
-Require all granted
-</Directory>
-
-<Directory /path/to/mysite.com/media>
-Require all granted
-</Directory>
 ```
 
 - Po provedení změn nutno restartovat Apache
