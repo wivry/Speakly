@@ -5,6 +5,8 @@ const ALERT_TIMER = 5; // doba zobrazení Alertu v sekundách
 function AddPerson(props) {
   const [firstName, setFirstName] = useState(""); // křesní jméno
   const [lastName, setLastName] = useState(""); // příjmení
+  const [age, setAge] = useState(); // věk
+  const [gender, setGender] = useState(""); // pohlaví
   const [sendWarning, setSendWarning] = useState(false); // true - zobrazí alert o vyplnění údajů
 
   // zmáčknuto tlačítko na odeslání nahrávek na server
@@ -45,31 +47,60 @@ function AddPerson(props) {
       </div>
 
       <div className="row mb-4">
-        <div className="col-4">
-          <label htmlFor="firstname-field">First name:</label>
+        <div class="col-4 form-floating mb-3">
           <input
-            id="firstname-field"
-            className="form-control"
             type="text"
+            class="form-control"
+            id="firstname-field"
+            placeholder="Adam"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
           />
-        </div>
-        <div className="col-4">
-          <label htmlFor="lastname-field">Last name:</label>
-          <input
-            id="lastname-field"
-            className="form-control"
-            type="text"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-          />
+          <label for="floatingInput">First name:</label>
         </div>
 
-        <div className="col-md-3 offset-md-1 text-end">
+        <div class="col-4 form-floating mb-3">
+          <input
+            type="text"
+            class="form-control"
+            id="lastname-field"
+            placeholder="Dark"
+            value={firstName}
+            onChange={(e) => setLastName(e.target.value)}
+          />
+          <label for="floatingInput">Last name:</label>
+        </div>
+      </div>
+      <div className="row">
+        <div class="col-4 form-floating">
+          <select
+            class="form-select"
+            id="genderSelect"
+            onChange={(e) => setGender(e.target.value)}
+          >
+            <option selected>Select your gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Different">Different</option>
+          </select>
+          <label for="floatingSelect">Gender</label>
+        </div>
+        <div class="col-4 form-floating mb-3">
+          <input
+            type="number"
+            class="form-control"
+            id="age-field"
+            placeholder="Adam"
+            value={age}
+            onChange={(e) => setAge(e.target.value)}
+          />
+          <label htmlFor="floatingInput">Age:</label>
+        </div>
+
+        <div className="col-4 text-end">
           <button
             type="button"
-            className="btn btn-primary  btn-lg shadow-lg h-100 custom-rounded"
+            className="col btn btn-primary  btn-lg shadow-lg custom-rounded"
             onClick={buttonPressedSend}
           >
             Send recording no. {props.showAddPerson}
