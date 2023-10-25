@@ -48,7 +48,7 @@ function NewRecord(props) {
       try {
         // odesílání nahrávky na api serveru
         const response = await fetch(
-          "sredemo/api/create-record",
+          " https://noel.fel.cvut.cz/sredemo/api/create-record",
           requestOptions
         );
         if (response.status === 201) {
