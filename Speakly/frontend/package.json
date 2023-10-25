@@ -2,7 +2,7 @@
   "name": "frontend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "homepage": "https://noel.fel.cvut.cz/sredemo/static/frontend",
   "scripts": {
     "dev": "webpack --mode development --watch",
