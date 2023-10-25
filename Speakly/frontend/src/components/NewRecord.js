@@ -47,7 +47,10 @@ function NewRecord(props) {
 
       try {
         // odesílání nahrávky na api serveru
-        const response = await fetch("/api/create-record", requestOptions);
+        const response = await fetch(
+          "sredemo/api/create-record",
+          requestOptions
+        );
         if (response.status === 201) {
           // pokud zápis do databáze byl vytvořen
           const data = await response.json();
