@@ -11,12 +11,16 @@ function AnalyzePage() {
         </h1>
       </div>
       <GoTo
-        GoToPage={{ name: "Go Back To Home Page", href: "/", blue: false }}
+        GoToPage={{
+          name: "Go Back To Home Page",
+          href: "/sredemo/",
+          blue: false,
+        }}
       />
       <GoTo
         GoToPage={{
           name: "Add a New Recording To The Database",
-          href: "/addrecord/",
+          href: "/sredemo/addrecord/",
           blue: false,
         }}
       />

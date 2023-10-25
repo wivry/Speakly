@@ -92,7 +92,11 @@ function NewRecord(props) {
   return (
     <div>
       <GoTo
-        GoToPage={{ name: "Go Back To Home Page", href: "/", blue: false }}
+        GoToPage={{
+          name: "Go Back To Home Page",
+          href: "/sredemo/",
+          blue: false,
+        }}
       />
       <div className="mt-3">
         <div className="shadow-lg custom-card">

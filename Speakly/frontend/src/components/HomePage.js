@@ -11,6 +11,8 @@ import AddRecordPage from "./AddRecordPage";
 import AnalyzePage from "./AnalyzePage";
 import GoTo from "./GoTo";
 
+const base_name = "/sredemo";
+
 function HomePage() {
   return (
     <Router basename="/sredemo">
@@ -28,14 +30,14 @@ function HomePage() {
               <GoTo
                 GoToPage={{
                   name: "Add a New Recording To The Database",
-                  href: "/addrecord/",
+                  href: base_name + "/addrecord/",
                   blue: true,
                 }}
               />
               <GoTo
                 GoToPage={{
                   name: "Analyze a Speaker",
-                  href: "/analyze/",
+                  href: base_name + "/analyze/",
                   blue: true,
                 }}
               />
