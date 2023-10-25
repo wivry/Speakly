@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "homepage": "https://noel.fel.cvut.cz",
+  "homepage": "https://noel.fel.cvut.cz/sredemo/static/frontend",
   "scripts": {
     "dev": "webpack --mode development --watch",
     "build": "webpack --mode production"
