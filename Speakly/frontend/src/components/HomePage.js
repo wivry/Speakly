@@ -13,7 +13,7 @@ import GoTo from "./GoTo";
 
 function HomePage() {
   return (
-    <Router>
+    <Router basename="/sredemo">
       <Routes>
         <Route
           exact
