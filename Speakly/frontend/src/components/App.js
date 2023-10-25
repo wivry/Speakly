@@ -7,7 +7,7 @@ import "bootstrap/dist/js/bootstrap.js";
 
 // komponent vykreslující stránku Reactu do šablony pro Django
 
-const root = ReactDOM.createRoot(document.getElementById("app"));
+const root = ReactDOM.createRoot(document.getElementById("main"));
 
 root.render(
   <React.StrictMode>
