@@ -25,6 +25,7 @@ function NewRecord(props) {
     setSelectedRecordings(rec);
   };
 
+  // odeslání informací a nahrávky na server
   const uploadRecording = async (name, blobUrl) => {
     try {
       // vytvoření blobu obsahující nahrávku z URL blobu
@@ -60,11 +61,14 @@ function NewRecord(props) {
           setPersonAdded(true); // osoba úspěšně přidaná (v useEffect se tímto triggerem i resetuje component recordVoice)
         } else {
           // Zpracování chyby v databázi
-          throw new Error("Ukládání do databáze selhalo");
+          throw new Error(
+            "Ukládání do databáze selhalo, server: ",
+            response.status
+          );
         }
       } catch (error) {
         // Chyba komunikace
-        console.log("chyba v komunikaci se serverem");
+        console.log("frontend: chyba v komunikaci se serverem");
         throw new Error(error);
       }
     } catch (error) {
