@@ -63,7 +63,7 @@ function NewRecord(props) {
           // Zpracování chyby v databázi
           throw new Error(
             "Ukládání do databáze selhalo, server: ",
-            response.status
+            String(response.status)
           );
         }
       } catch (error) {
