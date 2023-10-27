@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import GoTo from "./GoTo";
+import { url_basename, url_pageAddRecord } from "./url_sredemo";
 
 // komponent vykreslující stránku pro analýzu řečníka
 function AnalyzePage() {
@@ -11,12 +12,16 @@ function AnalyzePage() {
         </h1>
       </div>
       <GoTo
-        GoToPage={{ name: "Go Back To Home Page", href: "/", blue: false }}
+        GoToPage={{
+          name: "Go Back To Home Page",
+          href: url_basename,
+          blue: false,
+        }}
       />
       <GoTo
         GoToPage={{
           name: "Add a New Recording To The Database",
-          href: "/addrecord/",
+          href: url_pageAddRecord,
           blue: false,
         }}
       />

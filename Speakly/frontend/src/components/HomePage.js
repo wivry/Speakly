@@ -10,10 +10,15 @@ import {
 import AddRecordPage from "./AddRecordPage";
 import AnalyzePage from "./AnalyzePage";
 import GoTo from "./GoTo";
+import {
+  url_basename,
+  url_pageAddRecord,
+  url_pageAnalyze,
+} from "./url_sredemo";
 
 function HomePage() {
   return (
-    <Router>
+    <Router basename={url_basename}>
       <Routes>
         <Route
           exact
@@ -28,14 +33,14 @@ function HomePage() {
               <GoTo
                 GoToPage={{
                   name: "Add a New Recording To The Database",
-                  href: "/addrecord/",
+                  href: url_pageAddRecord,
                   blue: true,
                 }}
               />
               <GoTo
                 GoToPage={{
                   name: "Analyze a Speaker",
-                  href: "/analyze/",
+                  href: url_pageAnalyze,
                   blue: true,
                 }}
               />

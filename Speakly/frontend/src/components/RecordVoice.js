@@ -1,12 +1,7 @@
 import React from "react";
-import vmsg from "vmsg";
+import AudioAnalyser from "./lib/AudioAnalyser";
 
 const MAX_RECORDINGS = 10; // maximální množství nahrávek
-
-// odkaz na VMSG recorder nahrávek
-const recorder = new vmsg.Recorder({
-  wasmURL: "https://unpkg.com/vmsg@0.3.0/vmsg.wasm",
-});
 
 // vlastní třída pro nahrávání
 class RecordVoice extends React.Component {
@@ -21,7 +16,22 @@ class RecordVoice extends React.Component {
     isRecording: false,
     recordings: [], // zde jsou uložené nahrávky
     selectedAudio: 0, // index nahrávky, kterou uživatel zvolil (0 = žádná nahrávka)
+    status: "",
   };
+
+  // stav pro analyser
+  componentDidMount() {}
+
+  componentWillUnmount() {}
+
+  controlAudio(status) {
+    this.setState({
+      status,
+    });
+    this.setState({
+      audioType: "audio/wav",
+    });
+  }
 
   // resetuje danou komponentu resetováním stavů
   resetRecordVoice = () => {
@@ -31,37 +41,6 @@ class RecordVoice extends React.Component {
       recordings: [],
       selectedAudio: 0,
     });
-  };
-
-  // Funkce pro nahrávání audia z mikrofonu
-  record = async () => {
-    this.setState({ isLoading: true });
-    this.setState({ selectedAudio: 0 });
-
-    if (this.state.isRecording) {
-      // pokud již nahrávání běží, zastav ho
-      const blob = await recorder.stopRecording();
-      // uložení stavů nahrávání
-      this.setState({
-        isLoading: false,
-        isRecording: false,
-        recorded: true,
-        recordings: this.state.recordings.concat(URL.createObjectURL(blob)),
-      });
-    } else {
-      // pokud ještě recorder neběží, začni nahrávat
-      try {
-        await recorder.initAudio();
-        await recorder.initWorker();
-        recorder.startRecording();
-        this.props.newRecordIsDone(false);
-        this.setState({ isLoading: false, isRecording: true });
-      } catch (e) {
-        console.error(e);
-        this.props.newRecordIsDone(false);
-        this.setState({ isLoading: false });
-      }
-    }
   };
 
   // Funkce pro odstranění nahrávky z pole a aktualizaci stavu komponenty
@@ -86,22 +65,78 @@ class RecordVoice extends React.Component {
   // vykreslení komponenty
   render() {
     const { isLoading, isRecording, recordings } = this.state;
+    const { status, audioSrc, audioType } = this.state;
+    const audioProps = {
+      mimeType: "audio/wav",
+      audioType: "audio/wav",
+      //audioOptions: { sampleRate: 16000 },
+      backgroundColor: "rgba(255, 255, 255, 255)",
+      strokeColor: "#000000",
+      className: "audioConteiner",
+      //width: this.state.width,
+      width: 400,
+      audioBitsPerSecond: 128000,
+      status,
+      audioSrc,
+      timeslice: 1000, // timeslice（https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder/start#Parameters）
+      startCallback: (e) => {
+        this.props.newRecordIsDone(false);
+        this.setState({ isLoading: false, isRecording: true });
+        console.log("succ start", e);
+      },
+      pauseCallback: (e) => {
+        console.log("succ pause", e);
+      },
+      stopCallback: (e) => {
+        // uložení stavů nahrávání
+        this.setState({
+          isLoading: false,
+          isRecording: false,
+          recorded: true,
+          recordings: this.state.recordings.concat(URL.createObjectURL(e)),
+        });
+        console.log("succ stop", e);
+      },
+      onRecordCallback: (e) => {
+        this.props.newRecordIsDone(false);
+        this.setState({
+          isLoading: false,
+          isRecording: true,
+          selectedAudio: 0,
+        });
+        console.log("recording", e);
+      },
+      errorCallback: (err) => {
+        console.log("error", err);
+      },
+    };
     return (
       <React.Fragment>
-        <div className="row">
-          <div className="col-4" />
-          <button
-            className={
-              isRecording
-                ? "col-4 btn btn-lg shadow-lg btn-danger custom-rounded"
-                : "col-4 btn btn-lg shadow-lg btn-primary custom-rounded "
-            }
-            disabled={isLoading || recordings.length >= MAX_RECORDINGS}
-            onClick={this.record}
-          >
-            {isRecording ? "Stop recording" : "Record"}
-          </button>
-        </div>
+        <AudioAnalyser {...audioProps}>
+          <div className="row">
+            <div className="col-4" />
+
+            {status !== "recording" && (
+              <button
+                className="col-4 btn btn-lg shadow-lg btn-primary custom-rounded "
+                onClick={() => this.controlAudio("recording")}
+                disabled={isLoading || recordings.length >= MAX_RECORDINGS}
+              >
+                Record
+              </button>
+            )}
+            {status === "recording" && (
+              <button
+                className="col-4 btn btn-lg shadow-lg btn-danger custom-rounded "
+                onClick={() => this.controlAudio("inactive")}
+                disabled={isLoading || recordings.length >= MAX_RECORDINGS}
+              >
+                Stop recording
+              </button>
+            )}
+          </div>
+        </AudioAnalyser>
+
         <div className="row g-3">
           <div className="col-1"></div>
           <ul className="col mt-4" style={{ listStyle: "none", padding: 0 }}>

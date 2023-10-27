@@ -6,8 +6,10 @@ from django.db import models
 class Record(models.Model):
     first_name = models.CharField(max_length=50, default="") 
     last_name = models.CharField(max_length=50, default="")
+    gender = models.CharField(max_length=30, null=True, blank=True)
+    age = models.PositiveIntegerField(null=True, blank=True)
     record_number = models.IntegerField(null=False, default=1)
-    recorded_file = models.FileField(upload_to='audio_files/', default='default.mp3')   # toto pridane
+    recorded_file = models.FileField(upload_to='audio_files/', default='default.wav')   # toto pridane
     created_at = models.DateTimeField(auto_now_add=True)
     class Meta:     # toto pridane
         db_table='Record'

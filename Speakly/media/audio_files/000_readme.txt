@@ -1,0 +1,1 @@
+Zde jsou uloženy audio nahrávky.
