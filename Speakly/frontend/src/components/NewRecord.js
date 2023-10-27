@@ -1,6 +1,6 @@
 import RecordVoice from "./RecordVoice";
 import AddPerson from "./AddPerson";
-import GoTo from "./GoTo";
+import { url_api } from "./url_sredemo";
 
 import React, { useState, useEffect } from "react";
 
@@ -25,7 +25,7 @@ function NewRecord(props) {
     setSelectedRecordings(rec);
   };
 
-  const uploadRecording = async (name, blobUrl) => {
+  const uploadRecording = async (nameDetails, blobUrl) => {
     try {
       // vytvoření blobu obsahující nahrávku z URL blobu
       const responseBlob = await fetch(blobUrl);
@@ -35,10 +35,12 @@ function NewRecord(props) {
       const blob = await responseBlob.blob();
       // příprava odesílaných dat do proměnné formData
       const formData = new FormData();
-      formData.append("first_name", name.firstName);
-      formData.append("last_name", name.lastName);
+      formData.append("first_name", nameDetails.firstName);
+      formData.append("last_name", nameDetails.lastName);
+      formData.append("gender", nameDetails.gender);
+      formData.append("age", nameDetails.age);
       formData.append("record_number", showAddPerson);
-      formData.append("recorded_file", new File([blob], "recording.mp3"));
+      formData.append("recorded_file", new File([blob], "recording.wav"));
       // příprava formátu zprávy s odesílanými daty
       const requestOptions = {
         method: "POST",
@@ -47,7 +49,7 @@ function NewRecord(props) {
 
       try {
         // odesílání nahrávky na api serveru
-        const response = await fetch("/api/create-record", requestOptions);
+        const response = await fetch(url_api, requestOptions);
         if (response.status === 201) {
           // pokud zápis do databáze byl vytvořen
           const data = await response.json();
@@ -70,9 +72,9 @@ function NewRecord(props) {
   };
 
   // přidá danou nahrávku do databáze
-  const addPersonToData = (name) => {
+  const addPersonToData = (nameDetails) => {
     // tady se přidá do databáze a až databáze potvrdí, že přijala, tak:
-    uploadRecording(name, selectedRecordings);
+    uploadRecording(nameDetails, selectedRecordings);
     setShowAddPerson(0); // již není třeba zobrazovat rozhraní pro přidání do databáze
   };
 
@@ -91,9 +93,6 @@ function NewRecord(props) {
   // vykreslení komponenty
   return (
     <div>
-      <GoTo
-        GoToPage={{ name: "Go Back To Home Page", href: "/", blue: false }}
-      />
       <div className="mt-3">
         <div className="shadow-lg custom-card">
           <div className="row mt-3">

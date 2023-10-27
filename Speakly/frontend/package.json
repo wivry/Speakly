@@ -3,12 +3,16 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "homepage": "https://noel.fel.cvut.cz/sredemo/",
   "scripts": {
     "dev": "webpack --mode development --watch",
     "build": "webpack -mode production"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "SRE",
+    "demo"
+  ],
+  "author": "Marek Vavřínek",
   "license": "ISC",
   "devDependencies": {
     "-": "^0.0.1",

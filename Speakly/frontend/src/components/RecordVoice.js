@@ -1,13 +1,7 @@
 import React from "react";
-import vmsg from "vmsg";
 import AudioAnalyser from "./lib/AudioAnalyser";
 
 const MAX_RECORDINGS = 10; // maximální množství nahrávek
-
-// odkaz na VMSG recorder nahrávek
-const recorder = new vmsg.Recorder({
-  wasmURL: "https://unpkg.com/vmsg@0.3.0/vmsg.wasm",
-});
 
 // vlastní třída pro nahrávání
 class RecordVoice extends React.Component {
@@ -49,37 +43,6 @@ class RecordVoice extends React.Component {
     });
   };
 
-  // Funkce pro nahrávání audia z mikrofonu
-  record = async () => {
-    this.setState({ isLoading: true });
-    this.setState({ selectedAudio: 0 });
-
-    if (this.state.isRecording) {
-      // pokud již nahrávání běží, zastav ho
-      const blob = await recorder.stopRecording();
-      // uložení stavů nahrávání
-      this.setState({
-        isLoading: false,
-        isRecording: false,
-        recorded: true,
-        recordings: this.state.recordings.concat(URL.createObjectURL(blob)),
-      });
-    } else {
-      // pokud ještě recorder neběží, začni nahrávat
-      try {
-        await recorder.initAudio();
-        await recorder.initWorker();
-        recorder.startRecording();
-        this.props.newRecordIsDone(false);
-        this.setState({ isLoading: false, isRecording: true });
-      } catch (e) {
-        console.error(e);
-        this.props.newRecordIsDone(false);
-        this.setState({ isLoading: false });
-      }
-    }
-  };
-
   // Funkce pro odstranění nahrávky z pole a aktualizaci stavu komponenty
   deleteAudio = (index) => {
     if (!this.state.isLoading || !this.state.isRecording) {
@@ -112,8 +75,7 @@ class RecordVoice extends React.Component {
       className: "audioConteiner",
       //width: this.state.width,
       width: 400,
-
-      audioBitsPerSecond: 256000,
+      audioBitsPerSecond: 128000,
       status,
       audioSrc,
       timeslice: 1000, // timeslice（https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder/start#Parameters）
@@ -137,7 +99,11 @@ class RecordVoice extends React.Component {
       },
       onRecordCallback: (e) => {
         this.props.newRecordIsDone(false);
-        this.setState({ isLoading: false, isRecording: true });
+        this.setState({
+          isLoading: false,
+          isRecording: true,
+          selectedAudio: 0,
+        });
         console.log("recording", e);
       },
       errorCallback: (err) => {

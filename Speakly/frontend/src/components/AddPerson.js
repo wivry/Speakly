@@ -5,8 +5,8 @@ const ALERT_TIMER = 5; // doba zobrazení Alertu v sekundách
 function AddPerson(props) {
   const [firstName, setFirstName] = useState(""); // křesní jméno
   const [lastName, setLastName] = useState(""); // příjmení
-  const [age, setAge] = useState(); // věk
-  const [gender, setGender] = useState(""); // pohlaví
+  const [age, setAge] = useState(0); // věk
+  const [gender, setGender] = useState("Different"); // pohlaví
   const [sendWarning, setSendWarning] = useState(false); // true - zobrazí alert o vyplnění údajů
 
   // zmáčknuto tlačítko na odeslání nahrávek na server
@@ -19,10 +19,14 @@ function AddPerson(props) {
       props.addPersonInfo({
         firstName: firstName,
         lastName: lastName,
+        gender: gender,
+        age: age,
       });
       setSendWarning(false); // trigruje alert přes useEffect
       setFirstName(""); // smazání údajů v této komponentě
       setLastName("");
+      setGender("Different");
+      setAge(0);
     }
   };
 
@@ -46,66 +50,74 @@ function AddPerson(props) {
         </div>
       </div>
 
-      <div className="row mb-4">
-        <div class="col-4 form-floating mb-3">
-          <input
-            type="text"
-            class="form-control"
-            id="firstname-field"
-            placeholder="Adam"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-          />
-          <label for="floatingInput">First name:</label>
+      <div className="row mb-2">
+        <div className="col-4">
+          <div className="form-floating mb-2">
+            <input
+              type="text"
+              className={
+                sendWarning ? "form-control is-invalid" : "form-control"
+              }
+              id="firstname-field"
+              placeholder="Adam"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+            <label htmlFor="firstname-field">First name:</label>
+          </div>
         </div>
-
-        <div class="col-4 form-floating mb-3">
-          <input
-            type="text"
-            class="form-control"
-            id="lastname-field"
-            placeholder="Dark"
-            value={firstName}
-            onChange={(e) => setLastName(e.target.value)}
-          />
-          <label for="floatingInput">Last name:</label>
+        <div className="col-4">
+          <div className="form-floating mb-3">
+            <input
+              type="text"
+              className={
+                sendWarning ? "form-control is-invalid" : "form-control"
+              }
+              id="lastname-field"
+              placeholder="Dark"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+            />
+            <label htmlFor="lastname-field">Last name:</label>
+          </div>
         </div>
       </div>
-      <div className="row">
-        <div class="col-4 form-floating">
-          <select
-            class="form-select"
-            id="genderSelect"
-            onChange={(e) => setGender(e.target.value)}
-          >
-            <option selected>Select your gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Different">Different</option>
-          </select>
-          <label for="floatingSelect">Gender</label>
-        </div>
-        <div class="col-4 form-floating mb-3">
-          <input
-            type="number"
-            class="form-control"
-            id="age-field"
-            placeholder="Adam"
-            value={age}
-            onChange={(e) => setAge(e.target.value)}
-          />
-          <label htmlFor="floatingInput">Age:</label>
-        </div>
 
-        <div className="col-4 text-end">
-          <button
-            type="button"
-            className="col btn btn-primary  btn-lg shadow-lg custom-rounded"
-            onClick={buttonPressedSend}
-          >
-            Send recording no. {props.showAddPerson}
-          </button>
+      <div className="row">
+        <div className="col-4">
+          <div className="form-floating">
+            <select
+              className="form-select"
+              id="genderSelect"
+              onChange={(e) => setGender(e.target.value)}
+            >
+              <option value="Different">Different</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+            <label htmlFor="genderSelect">Gender</label>
+          </div>
         </div>
+        <div className="col-4">
+          <div className="form-floating mb-3">
+            <input
+              type="number"
+              className="form-control"
+              id="age-field"
+              placeholder="10"
+              value={age}
+              onChange={(e) => setAge(e.target.value)}
+            />
+            <label htmlFor="age-field">Age:</label>
+          </div>
+        </div>
+        <button
+          type="button"
+          className="col-4 btn btn-primary  btn-lg h-100 shadow-lg custom-rounded"
+          onClick={buttonPressedSend}
+        >
+          Send recording no. {props.showAddPerson}
+        </button>
       </div>
 
       {sendWarning && (

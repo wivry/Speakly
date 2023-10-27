@@ -1,5 +1,7 @@
 import React from "react";
 import NewRecord from "./NewRecord";
+import GoTo from "./GoTo";
+import { url_basename, url_pageAnalyze } from "./url_sredemo";
 
 // komponent vykreslující stránku pro nahrávání nových zápisů do databáze
 function AddRecordPage() {
@@ -10,6 +12,13 @@ function AddRecordPage() {
           Webové rozhraní pro rozpoznání řečníka
         </h1>
       </div>
+      <GoTo
+        GoToPage={{
+          name: "Go Back To Home Page",
+          href: url_basename,
+          blue: false,
+        }}
+      />
       <NewRecord />
     </div>
   );

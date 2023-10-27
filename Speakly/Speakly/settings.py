@@ -27,8 +27,10 @@ SECRET_KEY = 'django-insecure-y_=7^=5yq2sovbq7d6x+jpi0%^-o_d51&lvr*3hf8@66&9h4!j
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []      # zde musí být URL stránky
-#CORS_ALLOWED_ORIGINS = []
+#CORS_ALLOW_ALL_ORIGINS = True  # Not required, but convenient for testing
+
+ALLOWED_HOSTS = ['noel.fel.cvut.cz', 'www.noel.fel.cvut.cz', "127.0.0.1"]      # zde musí být URL stránky
+CORS_ALLOWED_ORIGINS = ["https://noel.fel.cvut.cz", "https://www.noel.fel.cvut.cz","https://127.0.0.1"]
 
 
 # Application definition
@@ -86,7 +88,7 @@ WSGI_APPLICATION = 'Speakly.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'media/db.sqlite3',
     }
 }
 
