@@ -1,4 +1,5 @@
-Speakly/media/audio_files/
+Speakly/media/audio_files/*
+!Speakly/media/audio_files/*.txt
 
 Speakly/frontend/node_modules/
 
