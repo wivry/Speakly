@@ -23,21 +23,18 @@ class CreateRecordView(APIView):
         #uploaded_file = request.data['recorded_file']
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():         # nutno zkontrolovat vždy, zda jsou data validni
-            first_name = serializer.validated_data.get('first_name')
-            last_name = serializer.validated_data.get('last_name')
+            name = serializer.validated_data.get('name')
+            location = serializer.validated_data.get('location')
             gender = serializer.validated_data.get('gender')
             age = serializer.validated_data.get('age')
             record_number = serializer.validated_data.get('record_number')
             uploaded_file = serializer.validated_data.get('recorded_file')
 
-            message = gender
-            # Výpis zprávy do konzole
-            print(message)
 
             if age == 0:
                 age = None
 
-            record = Record(first_name=first_name, last_name=last_name, gender=gender, age=age, record_number=record_number)
+            record = Record(name=name, location=location, gender=gender, age=age, record_number=record_number)
 
             # Získání ID posledního vytvořeného záznamu
             try:
@@ -47,7 +44,10 @@ class CreateRecordView(APIView):
                 # Zde co se má stát, když neexistují žádné záznamy
                 record_id = 1
 
-            file_name = str(record_id) + "_" + str(first_name) + "_" + str(last_name) + ".wav"
+            spkr_id = "SPKR" + f"{record_id:06d}"
+            record.spkr_id = spkr_id
+
+            file_name = spkr_id + "_" + str(name) + "_" + str(location) + "_" + str(gender) + "_" + str(age) + ".wav"
             # Přiřazení nahrávky
             record.recorded_file.save(file_name, uploaded_file)
             #record.recorded_file.save(new_file_name.name, uploaded_file)

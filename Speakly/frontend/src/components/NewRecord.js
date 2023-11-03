@@ -10,7 +10,7 @@ function NewRecord(props) {
   const [showAddPerson, setShowAddPerson] = useState(0); // 0 = žádná nahravka, číslo = index nahrávky
   const [personAdded, setPersonAdded] = useState(false); // nastaveno do true po úspěšném přidání osoby do databáze
   const [selectedRecordings, setSelectedRecordings] = useState([]); // URL vybrané nahrávky k odeslání
-  const [uploadRecordsID, setUploadRecordsID] = useState(0); // ID zápisu v databázi, které vrátí server
+  const [uploadRecordsID, setUploadRecordsID] = useState(""); // ID zápisu v databázi, které vrátí server
 
   const recordVoiceRef = React.createRef(); // reference na volání resetu
 
@@ -35,8 +35,8 @@ function NewRecord(props) {
       const blob = await responseBlob.blob();
       // příprava odesílaných dat do proměnné formData
       const formData = new FormData();
-      formData.append("first_name", nameDetails.firstName);
-      formData.append("last_name", nameDetails.lastName);
+      formData.append("name", nameDetails.name);
+      formData.append("location", nameDetails.location);
       formData.append("gender", nameDetails.gender);
       formData.append("age", nameDetails.age);
       formData.append("record_number", showAddPerson);
@@ -54,7 +54,7 @@ function NewRecord(props) {
           // pokud zápis do databáze byl vytvořen
           const data = await response.json();
           console.log("Nahrávka byla úspěšně nahrána:", data);
-          setUploadRecordsID(data.id);
+          setUploadRecordsID(data.spkr_id);
           // Nahrávka byla úspěšně uložena
           setPersonAdded(true); // osoba úspěšně přidaná (v useEffect se tímto triggerem i resetuje component recordVoice)
         } else {

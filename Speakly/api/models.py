@@ -4,12 +4,14 @@ from django.db import models
 # Create your models here.
 
 class Record(models.Model):
-    first_name = models.CharField(max_length=50, default="") 
-    last_name = models.CharField(max_length=50, default="")
-    gender = models.CharField(max_length=30, null=True, blank=True)
-    age = models.PositiveIntegerField(null=True, blank=True)
+    spkr_id = models.CharField(max_length=10, default="SPKR000000")
+    name = models.CharField(max_length=50, null=True, blank=True) 
+    location = models.CharField(max_length=50, null=True, blank=True)
+    gender = models.CharField(max_length=30, default="")
+    age = models.PositiveIntegerField(default=0)
     record_number = models.IntegerField(null=False, default=1)
     recorded_file = models.FileField(upload_to='audio_files/', default='default.wav')   # toto pridane
+    removable = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     class Meta:     # toto pridane
         db_table='Record'
