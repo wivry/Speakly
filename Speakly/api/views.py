@@ -8,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.core.files import File
 from django.core.files.storage import default_storage
 from django.core.exceptions import ObjectDoesNotExist
+from django.conf import settings
 
 # Create your views here.
 
@@ -44,9 +45,15 @@ class CreateRecordView(APIView):
                 # Zde co se má stát, když neexistují žádné záznamy
                 record_id = 1
 
+            # kontrola poctu záznamu v databázi
+            if (record_id > settings.MAX_NUMBER_RECORD):
+                return Response({'Database is full at the moment'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            # vytváření SPKR_ID
             spkr_id = "SPKR" + f"{record_id:06d}"
             record.spkr_id = spkr_id
 
+            # nazev audio souboru
             file_name = spkr_id + "_" + str(name) + "_" + str(location) + "_" + str(gender) + "_" + str(age) + ".wav"
             # Přiřazení nahrávky
             record.recorded_file.save(file_name, uploaded_file)
