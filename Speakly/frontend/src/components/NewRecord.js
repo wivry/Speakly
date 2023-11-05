@@ -9,6 +9,8 @@ const ALERT_TIMER = 8; // doba zobrazení Alertu v sekundách
 function NewRecord(props) {
   const [showAddPerson, setShowAddPerson] = useState(0); // 0 = žádná nahravka, číslo = index nahrávky
   const [personAdded, setPersonAdded] = useState(false); // nastaveno do true po úspěšném přidání osoby do databáze
+  const [personFailed, setPersonFailed] = useState(false); // nastaveno do true po neúspěšném přidání osoby do databáze
+  const [personUploading, setPersonUploading] = useState(false); // nastaveno do true po uploadovaní na server
   const [selectedRecordings, setSelectedRecordings] = useState([]); // URL vybrané nahrávky k odeslání
   const [uploadRecordsID, setUploadRecordsID] = useState(""); // ID zápisu v databázi, které vrátí server
 
@@ -56,9 +58,12 @@ function NewRecord(props) {
           console.log("Nahrávka byla úspěšně nahrána:", data);
           setUploadRecordsID(data.spkr_id);
           // Nahrávka byla úspěšně uložena
+          setPersonUploading(false); // po úspěšném uploadu není třeba dále zobrazovat info, že se uploaduje
           setPersonAdded(true); // osoba úspěšně přidaná (v useEffect se tímto triggerem i resetuje component recordVoice)
         } else {
           // Zpracování chyby v databázi
+          setPersonUploading(false); // po uploadu není třeba dále zobrazovat info, že se uploaduje
+          setPersonFailed(true); // alert, že se nepovedlo nahrát soubor
           throw new Error("Ukládání do databáze selhalo");
         }
       } catch (error) {
@@ -68,14 +73,17 @@ function NewRecord(props) {
       }
     } catch (error) {
       console.error("Chyba při uploadu na server:", error);
+      setPersonUploading(false); // po uploadu není třeba dále zobrazovat info, že se uploaduje
+      setPersonFailed(true); // alert, že se nepovedlo nahrát soubor
     }
   };
 
   // přidá danou nahrávku do databáze
   const addPersonToData = (nameDetails) => {
     // tady se přidá do databáze a až databáze potvrdí, že přijala, tak:
-    uploadRecording(nameDetails, selectedRecordings);
+    setPersonUploading(true); // alert, že nyní se uploaduje
     setShowAddPerson(0); // již není třeba zobrazovat rozhraní pro přidání do databáze
+    uploadRecording(nameDetails, selectedRecordings);
   };
 
   // při změně personAdded je volán tento effect, který zobrazí na 8s alert se statusem přidání nahrávky
@@ -126,6 +134,38 @@ function NewRecord(props) {
         </div>
       ) : (
         <div />
+      )}
+
+      {personUploading && (
+        <div
+          className="alert alert-warning text-center custom-success shadow-lg mt-5 "
+          role="alert"
+        >
+          <h4 className="alert-heading">The audio file is uploading!</h4>
+          <p>
+            Don't close your browser. Please wait until the uploading is done.
+          </p>
+        </div>
+      )}
+
+      {personFailed && (
+        <div
+          className="alert alert-danger alert-dismissible fade show text-center custom-success shadow-lg mt-5 "
+          role="alert"
+        >
+          <h4 className="alert-heading">Something is wrong!</h4>
+          <p>
+            Your audio file has not been uploaded to the server. Please try it
+            later.
+          </p>
+          <button
+            type="button"
+            className="btn-close position-absolute top-50 translate-middle"
+            data-bs-dismiss="alert"
+            aria-label="Close"
+            onClick={() => setPersonFailed(false)} // Zavření alertu kliknutím na tlačítko Zavřít
+          ></button>
+        </div>
       )}
 
       {personAdded && (
