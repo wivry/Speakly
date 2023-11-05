@@ -10,6 +10,9 @@ from django.core.files.storage import default_storage
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 
+import os
+import subprocess
+
 # Create your views here.
 
 class RecordView(generics.ListAPIView):
@@ -57,7 +60,11 @@ class CreateRecordView(APIView):
             file_name = spkr_id + "_" + str(name) + "_" + str(location) + "_" + str(gender) + "_" + str(age) + ".wav"
             # Přiřazení nahrávky
             record.recorded_file.save(file_name, uploaded_file)
-            #record.recorded_file.save(new_file_name.name, uploaded_file)
+            # změna práv uloženého souboru
+            if (settings.DEBUG == False & settings.CHGRP_SREDEMO == True):
+                audio_file_path = "media/audio_files/" + file_name
+                subprocess.call(["chgrp", "sredemo", audio_file_path])
+                os.chmod(audio_file_path, 0o664)
             
             # Uložení záznamu
             record.save()
