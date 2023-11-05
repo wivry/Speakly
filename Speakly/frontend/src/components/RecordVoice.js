@@ -2,12 +2,14 @@ import React from "react";
 import AudioAnalyser from "./lib/AudioAnalyser";
 
 const MAX_RECORDINGS = 10; // maximální množství nahrávek
+const MAX_RECORD_TIME = 60; // maximální čas jedné nahrávky v sekundách
 
 // vlastní třída pro nahrávání
 class RecordVoice extends React.Component {
   constructor(props) {
     super(props);
     this.props.newRecordIsDone(false);
+    this.timeout = null; // Inicializace proměnné timeout v rámci třídy
   }
 
   // výchozí stavy dané komponenty
@@ -83,11 +85,17 @@ class RecordVoice extends React.Component {
         this.props.newRecordIsDone(false);
         this.setState({ isLoading: false, isRecording: true });
         console.log("succ start", e);
+        // nastavení časovače pro automatické vypnutí nahrávání po  MAX_RECORD_TIME s
+        this.timeout = setTimeout(() => {
+          this.controlAudio("inactive");
+        }, 1000 * MAX_RECORD_TIME);
       },
       pauseCallback: (e) => {
         console.log("succ pause", e);
       },
       stopCallback: (e) => {
+        // Zrušení timeoutu, pokud uživatel stopne nahrávání dřiv, než uplyne  MAX_RECORD_TIME s
+        clearTimeout(this.timeout);
         // uložení stavů nahrávání
         this.setState({
           isLoading: false,
