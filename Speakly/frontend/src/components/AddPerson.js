@@ -43,7 +43,7 @@ function AddPerson(props) {
 
   // vykreslení komponenty
   return (
-    <div className="shadow-lg custom-card mb-5">
+    <div className="shadow-lg custom-card">
       <div className="row mt-3">
         <div className="col-4">
           <h5>Fill your details</h5>

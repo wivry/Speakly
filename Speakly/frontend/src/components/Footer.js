@@ -3,7 +3,7 @@ import React from "react";
 // komponent tlačítka pro přechod na jinou stránku
 function Footer(props) {
   return (
-    <div className="shadow-lg custom-card mb-4">
+    <div className="shadow-lg custom-card mt-4 mb-4">
       <div className="row">
         <div className="d-flex align-items-center justify-content-center">
           <p>
