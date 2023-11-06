@@ -34,6 +34,7 @@
     "prop-types": "^15.8.1",
     "react-audio-analyser": "^1.0.0",
     "react-router-dom": "^6.16.0",
-    "vmsg": "^0.4.0"
+    "vmsg": "^0.4.0",
+    "wavesurfer.js": "^7.4.3"
   }
 }

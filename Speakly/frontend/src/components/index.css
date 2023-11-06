@@ -13,7 +13,7 @@ code {
     monospace;
 }
 
-@media (min-width: 1400px) {
+@media (min-width: 1120px) {
   .custom-container {
     max-width: 1100px !important;
   }
@@ -40,4 +40,8 @@ code {
 
 .custom-button {
   width: 90px; /* Zde nastavte požadovanou šířku v pixelů */
+}
+
+.custom-background {
+  background-color: #e9ecef;
 }

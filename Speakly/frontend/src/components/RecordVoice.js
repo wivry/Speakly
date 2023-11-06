@@ -1,5 +1,6 @@
 import React from "react";
 import AudioAnalyser from "./lib/AudioAnalyser";
+import AudioWaveform from "./AudioWaveform";
 
 const MAX_RECORDINGS = 10; // maximální množství nahrávek
 const MAX_RECORD_TIME = 60; // maximální čas jedné nahrávky v sekundách
@@ -146,47 +147,42 @@ class RecordVoice extends React.Component {
         </AudioAnalyser>
 
         <div className="row g-3">
-          <div className="col-1"></div>
           <ul className="col mt-4" style={{ listStyle: "none", padding: 0 }}>
             {recordings.map((url, index) => (
               <li key={url}>
                 <div className="row mt-2 mb-2">
                   <div
-                    className="col-1 bg-light custom-rounded d-flex align-items-center justify-content-center"
-                    style={{ width: "60px", height: "54px" }}
+                    className="col-1 custom-background shadow-sm custom-rounded d-flex align-items-center justify-content-center ms-1"
+                    style={{ width: "60px" }}
                   >
-                    <h5 className="">{index + 1}</h5>
+                    <h5>{index + 1}</h5>
                   </div>
 
-                  <audio className="col-7" src={url} controls />
+                  <AudioWaveform audioURL={url} className="ms-1" />
 
-                  <div className="col-md-2 offset-md-1 text-end">
-                    <div className="d-inline-flex h-100">
-                      <button
-                        className="btn shadow-sm btn-danger custom-rounded custom-button"
-                        type="button"
-                        disabled={isLoading || isRecording}
-                        onClick={() => this.deleteAudio(index)}
-                      >
-                        Delete
-                      </button>
+                  <button
+                    className="col-1 btn shadow-sm btn-danger custom-rounded custom-button ms-2"
+                    type="button"
+                    disabled={isLoading || isRecording}
+                    onClick={() => this.deleteAudio(index)}
+                  >
+                    Delete
+                  </button>
 
-                      <button
-                        className="btn ms-2 shadow-sm btn-warning custom-rounded custom-button"
-                        type="button"
-                        data-toggle="button"
-                        aria-pressed="false"
-                        disabled={
-                          isLoading ||
-                          isRecording ||
-                          this.state.selectedAudio === index + 1
-                        }
-                        onClick={() => this.sendAudio(index)}
-                      >
-                        Select
-                      </button>
-                    </div>
-                  </div>
+                  <button
+                    className="col-1 btn ms-2 shadow-sm btn-warning custom-rounded custom-button"
+                    type="button"
+                    data-toggle="button"
+                    aria-pressed="false"
+                    disabled={
+                      isLoading ||
+                      isRecording ||
+                      this.state.selectedAudio === index + 1
+                    }
+                    onClick={() => this.sendAudio(index)}
+                  >
+                    Select
+                  </button>
                 </div>
               </li>
             ))}

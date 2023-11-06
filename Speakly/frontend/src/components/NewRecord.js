@@ -116,7 +116,7 @@ function NewRecord(props) {
             </h5>
           </div>
 
-          <div className="mt-4">
+          <div>
             <RecordVoice
               newRecordIsDone={buttonPressedSelect}
               ref={recordVoiceRef}
@@ -138,7 +138,7 @@ function NewRecord(props) {
 
       {personUploading && (
         <div
-          className="alert alert-warning text-center custom-success shadow-lg mt-5 "
+          className="alert alert-warning text-center custom-success shadow-lg mt-4 "
           role="alert"
         >
           <h4 className="alert-heading">The audio file is uploading!</h4>
@@ -150,7 +150,7 @@ function NewRecord(props) {
 
       {personFailed && (
         <div
-          className="alert alert-danger alert-dismissible fade show text-center custom-success shadow-lg mt-5 "
+          className="alert alert-danger alert-dismissible fade show text-center custom-success shadow-lg mt-4 "
           role="alert"
         >
           <h4 className="alert-heading">Something is wrong!</h4>
@@ -170,7 +170,7 @@ function NewRecord(props) {
 
       {personAdded && (
         <div
-          className="alert alert-success alert-dismissible fade show text-center custom-success shadow-lg mt-5 "
+          className="alert alert-success alert-dismissible fade show text-center custom-success shadow-lg mt-4 "
           role="alert"
         >
           <h4 className="alert-heading">Well done!</h4>

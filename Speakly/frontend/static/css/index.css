@@ -17,6 +17,10 @@ code {
   max-width: 1440px;
 }
 
+.custom-background {
+  background-color: #adb5bd;
+}
+
 .custom-card {
   border-radius: 70px; /* Nastavte požadovanou hodnotu zaoblení v pixelů */
   padding: 70px;
