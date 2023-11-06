@@ -45,3 +45,17 @@ code {
 .custom-background {
   background-color: #e9ecef;
 }
+
+.custom-container-flex {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh; /* Nastavení minimální výšky pro celou stránku */
+  display: flex;
+  flex-direction: column;
+}
+
+.costum-body-flex {
+  flex: 1; /* Roztáhněte obsah na zbývající volnou výšku */
+  margin: 0;
+  padding: 0;
+}
