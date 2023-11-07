@@ -8,3 +8,6 @@ export const url_pageAnalyze = DEBUG ? "/analyze/" : "/sredemo/analyze/";
 export const url_api = DEBUG
   ? "/api/create-record"
   : "/sredemo/api/create-record";
+export const url_sentence = DEBUG
+  ? "/api/RandomSentence"
+  : "/sredemo/api/RandomSentence";

@@ -1,6 +1,7 @@
 import RecordVoice from "./RecordVoice";
 import AddPerson from "./AddPerson";
 import { url_api } from "./url_sredemo";
+import Sentence from "./Sentence";
 
 import React, { useState, useEffect } from "react";
 
@@ -110,10 +111,7 @@ function NewRecord(props) {
             <p>Read following sentence:</p>
           </div>
           <div className="row">
-            <h5 id="sentance">
-              Toto je věta, kterou je potřeba přečíst pro nahrání dostatečně
-              dlouhé nahrávky hlasu.
-            </h5>
+            <Sentence />
           </div>
 
           <div>

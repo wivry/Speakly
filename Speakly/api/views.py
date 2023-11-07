@@ -9,22 +9,40 @@ from django.core.files import File
 from django.core.files.storage import default_storage
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
+import random
+from django.http import JsonResponse
+from django.contrib.staticfiles import finders
 
 import os
 import subprocess
 
-# Create your views here.
-
+# Pohled na obsah databáze
 class RecordView(generics.ListAPIView):
     queryset = Record.objects.all()
     serializer_class = RecordSerializer
 
+# funkce, která vrací náhodnou větu do rozhraní na nahrávání do databáze
+def RandomSentenceView(request):
+    sentences_file_path = finders.find('data/sentences')
+    
+    if sentences_file_path:
+        with open(sentences_file_path, 'r', encoding='utf-8') as file:
+            sentences = file.readlines()
+        
+        # Vyberte náhodnou větu
+        random_sentence = random.choice(sentences)
+        
+        # Odešlete náhodnou větu jako JSON
+        return JsonResponse({'sentence': random_sentence.strip()})
+    else:
+        return JsonResponse({'error': 'Soubor "sentences" nebyl nalezen.'}, status=404)
+
+# Pohled na ukládání do databáze
 class CreateRecordView(APIView):
     serializer_class = CreateRecordSerializer
 
     def post(self, request, format=None):
         # Získání nahrávky z požadavku
-        #uploaded_file = request.data['recorded_file']
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():         # nutno zkontrolovat vždy, zda jsou data validni
             name = serializer.validated_data.get('name')
@@ -33,7 +51,6 @@ class CreateRecordView(APIView):
             age = serializer.validated_data.get('age')
             record_number = serializer.validated_data.get('record_number')
             uploaded_file = serializer.validated_data.get('recorded_file')
-
 
             if age == 0:
                 age = None
