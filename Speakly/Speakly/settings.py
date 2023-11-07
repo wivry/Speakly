@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-y_=7^=5yq2sovbq7d6x+jpi0%^-o_d51&lvr*3hf8@66&9h4!j'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 #CORS_ALLOW_ALL_ORIGINS = True  # Not required, but convenient for testing
 
@@ -127,13 +127,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+if DEBUG:
+    STATIC_URL = 'static/'
+    MEDIA_URL = 'media/'
+else:
+    STATIC_URL = 'sredemo/static/'
+    MEDIA_URL = 'sredemo/media/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Media settings (determines where images will be uploaded)
 
-MEDIA_URL = 'media/'
+
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -153,4 +158,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MAX_NUMBER_RECORD = 200
 
 # povolení měnění práv uložených souborů na skupinu sredemo
-CHGRP_SREDEMO = True    # pro aktivaci musí být True a DEBUG = False
+CHGRP_SREDEMO = False    # pro aktivaci musí být True a DEBUG = False

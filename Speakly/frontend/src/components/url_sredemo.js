@@ -1,6 +1,6 @@
 // zde jsou definované adresy pro verze debug a pro production na noel.fel.cvut.cz/sredemo
 
-const DEBUG = true;
+const DEBUG = false;
 
 export const url_basename = DEBUG ? "/" : "/sredemo";
 export const url_pageAddRecord = DEBUG ? "/addrecord/" : "/sredemo/addrecord/";
