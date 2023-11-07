@@ -44,6 +44,12 @@ code {
 
 .custom-background {
   background-color: #e9ecef;
+  position: relative;
+}
+
+#waveform ::part(hover-label) {
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .custom-container-flex {
@@ -58,4 +64,23 @@ code {
   flex: 1; /* Roztáhněte obsah na zbývající volnou výšku */
   margin: 0;
   padding: 0;
+}
+
+.time,
+.duration {
+  position: absolute;
+  border-radius: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 2px;
+  color: #ddd;
+}
+.time {
+  left: 5px; /* Vlevo na začátku komponentu */
+}
+
+.duration {
+  right: 5px; /* Vpravo na konci komponentu */
 }
