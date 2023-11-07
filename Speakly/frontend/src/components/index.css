@@ -18,28 +18,28 @@ code {
     max-width: 1100px !important;
   }
   .custom-font-size {
-    font-size: 4.5rem;
+    font-size: 3rem;
   }
 }
 
 .custom-card {
-  border-radius: 70px; /* Nastavte požadovanou hodnotu zaoblení v pixelů */
-  padding: 50px;
-  padding-top: 35px;
-  padding-bottom: 30px;
+  border-radius: 50px; /* Nastavte požadovanou hodnotu zaoblení v pixelů */
+  padding: 25px;
+  padding-top: 20px;
+  padding-bottom: 20px;
   background-color: white;
 }
 
 .custom-success {
-  border-radius: 70px !important;
+  border-radius: 50px !important;
 }
 
 .custom-rounded {
-  border-radius: 27px !important;
+  border-radius: 26px !important;
 }
 
-.custom-button {
-  width: 90px; /* Zde nastavte požadovanou šířku v pixelů */
+.custom-rounded-input {
+  border-radius: 20px !important;
 }
 
 .custom-background {

@@ -25,7 +25,7 @@ function HomePage() {
           path="/"
           element={
             <div className="container custom-container">
-              <div className="mt-3">
+              <div className="mt-1">
                 <h1 className="display-4 text-center custom-font-size">
                   Webové rozhraní pro rozpoznání řečníka
                 </h1>

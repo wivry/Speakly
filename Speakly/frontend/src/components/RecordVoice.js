@@ -146,31 +146,37 @@ class RecordVoice extends React.Component {
           </div>
         </AudioAnalyser>
 
-        <div className="row g-3">
-          <ul className="col mt-4" style={{ listStyle: "none", padding: 0 }}>
+        <div className="row mb-1">
+          <ul
+            className="col"
+            style={{ listStyle: "none", padding: 0, margin: 0 }}
+          >
             {recordings.map((url, index) => (
-              <li key={url}>
+              <li key={url} className="ms-2" style={{ marginRight: 15 }}>
                 <div className="row mt-2 mb-2">
                   <div
-                    className="col-1 custom-background shadow-sm custom-rounded d-flex align-items-center justify-content-center ms-1"
+                    className="col-1 custom-background shadow-sm custom-rounded d-flex align-items-center justify-content-center ms-2"
                     style={{ width: "60px" }}
                   >
-                    <h5>{index + 1}</h5>
+                    <h5 className="mt-1 mb-1">{index + 1}</h5>
                   </div>
 
                   <AudioWaveform audioURL={url} className="ms-1" />
 
                   <button
-                    className="col-1 btn shadow-sm btn-danger custom-rounded custom-button ms-2"
+                    className="col-1 btn shadow-sm btn-danger custom-rounded ms-2"
+                    style={{ width: "70px" }}
                     type="button"
                     disabled={isLoading || isRecording}
                     onClick={() => this.deleteAudio(index)}
                   >
-                    Delete
+                    {" "}
+                    <i className="bi bi-trash3"></i>
                   </button>
 
                   <button
-                    className="col-1 btn ms-2 shadow-sm btn-warning custom-rounded custom-button"
+                    className="col-1 btn ms-2 mr-2 shadow-sm btn-warning custom-rounded custom-button"
+                    style={{ width: "90px" }}
                     type="button"
                     data-toggle="button"
                     aria-pressed="false"

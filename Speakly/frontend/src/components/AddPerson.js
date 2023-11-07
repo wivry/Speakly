@@ -44,18 +44,18 @@ function AddPerson(props) {
   // vykreslení komponenty
   return (
     <div className="shadow-lg custom-card">
-      <div className="row mt-3">
+      <div className="row mt-2 ms-1">
         <div className="col-4">
           <h5>Fill your details</h5>
         </div>
       </div>
 
-      <div className="row mb-2">
-        <div className="col-4">
-          <div className="form-floating mb-2">
+      <div className="row">
+        <div className="col-4" style={{ padding: 0 }}>
+          <div className="form-floating mb-2 ms-2">
             <input
               type="text"
-              className="form-control"
+              className="form-control custom-rounded-input"
               id="name-field"
               placeholder="Adam"
               value={name}
@@ -64,12 +64,14 @@ function AddPerson(props) {
             <label htmlFor="name-field">Name (or nickname):</label>
           </div>
         </div>
-        <div className="col-4">
-          <div className="form-floating mb-3">
+        <div className="col-4" style={{ padding: 0 }}>
+          <div className="form-floating mb-2 ms-2">
             <input
               type="text"
               className={
-                sendWarning ? "form-control is-invalid" : "form-control"
+                sendWarning
+                  ? "form-control is-invalid custom-rounded-input"
+                  : "form-control custom-rounded-input"
               }
               id="location-field"
               placeholder="Prague"
@@ -82,10 +84,10 @@ function AddPerson(props) {
       </div>
 
       <div className="row">
-        <div className="col-4">
-          <div className="form-floating">
+        <div className="col-4" style={{ padding: 0 }}>
+          <div className="form-floating mb-2 ms-2">
             <select
-              className="form-control"
+              className="form-control custom-rounded-input"
               id="genderSelect"
               onChange={(e) => setGender(e.target.value)}
             >
@@ -96,12 +98,14 @@ function AddPerson(props) {
             <label htmlFor="genderSelect">Gender</label>
           </div>
         </div>
-        <div className="col-4">
-          <div className="form-floating mb-3">
+        <div className="col-4" style={{ padding: 0 }}>
+          <div className="form-floating mb-2 ms-2">
             <input
               type="number"
               className={
-                sendWarning ? "form-control is-invalid" : "form-control"
+                sendWarning
+                  ? "form-control is-invalid custom-rounded-input"
+                  : "form-control custom-rounded-input"
               }
               id="age-field"
               placeholder="10"
@@ -113,7 +117,7 @@ function AddPerson(props) {
         </div>
         <button
           type="button"
-          className="col-4 btn btn-primary  btn-lg h-100 shadow-lg custom-rounded"
+          className="col-3 btn btn-lg btn-primary shadow-lg custom-rounded mb-2 ms-5"
           onClick={buttonPressedSend}
         >
           Send recording no. {props.showAddPerson}
@@ -122,7 +126,7 @@ function AddPerson(props) {
 
       {sendWarning && (
         <div
-          className="alert alert-danger alert-dismissible fade show text-center custom-rounded mt-5"
+          className="alert alert-danger alert-dismissible fade show text-center custom-rounded mt-3 mb-2"
           role="alert"
         >
           You have to fill your details!

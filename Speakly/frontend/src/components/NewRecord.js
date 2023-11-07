@@ -104,11 +104,10 @@ function NewRecord(props) {
     <div>
       <div className="mt-3">
         <div className="shadow-lg custom-card">
-          <div className="row mt-3">
-            <h4>Make a new record of a person</h4>
-          </div>
-          <div className="row mt-2">
-            <p>Read following sentence:</p>
+          <div className="row">
+            <div className=" d-flex align-items-center justify-content-center">
+              <h4>Make a new record of a person</h4>
+            </div>
           </div>
           <div className="row">
             <Sentence />
@@ -124,7 +123,7 @@ function NewRecord(props) {
       </div>
 
       {showAddPerson ? (
-        <div className="mt-4">
+        <div className="mt-3">
           <AddPerson
             addPersonInfo={addPersonToData}
             showAddPerson={showAddPerson}
@@ -136,7 +135,7 @@ function NewRecord(props) {
 
       {personUploading && (
         <div
-          className="alert alert-warning text-center custom-success shadow-lg mt-4 "
+          className="alert alert-warning text-center custom-success shadow-lg mt-3 "
           role="alert"
         >
           <h4 className="alert-heading">The audio file is uploading!</h4>
@@ -148,7 +147,7 @@ function NewRecord(props) {
 
       {personFailed && (
         <div
-          className="alert alert-danger alert-dismissible fade show text-center custom-success shadow-lg mt-4 "
+          className="alert alert-danger alert-dismissible fade show text-center custom-success shadow-lg mt-3 "
           role="alert"
         >
           <h4 className="alert-heading">Something is wrong!</h4>
@@ -168,7 +167,7 @@ function NewRecord(props) {
 
       {personAdded && (
         <div
-          className="alert alert-success alert-dismissible fade show text-center custom-success shadow-lg mt-4 "
+          className="alert alert-success alert-dismissible fade show text-center custom-success shadow-lg mt-3 "
           role="alert"
         >
           <h4 className="alert-heading">Well done!</h4>

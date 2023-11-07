@@ -26,8 +26,11 @@ function Sentence() {
   }, []);
 
   return (
-    <div className="d-flex align-items-center justify-content-center">
-      <p>{randomSentence}</p>
+    <div>
+      <div>Read following sentence:</div>
+      <div className="d-flex align-items-center justify-content-center">
+        {randomSentence}
+      </div>
     </div>
   );
 }

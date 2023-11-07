@@ -9,7 +9,7 @@ function AddRecordPage() {
   return (
     <div className="container custom-container custom-container-flex">
       <div className="costum-body-flex">
-        <div className="mt-3">
+        <div className="mt-1">
           <h1 className="display-4 text-center custom-font-size">
             Webové rozhraní pro rozpoznání řečníka
           </h1>
