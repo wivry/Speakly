@@ -227,6 +227,7 @@ npm install bootstrap jquery --save
 npm install vmsg --save
 npm i react-audio-analyser        # náhrada za wmsg kvůli podpoře wav
 npm i prop-types
+npm i wavesurfer.js               # vykreslení waveform
 
 npm install @babel/plugin-proposal-class-properties
 npm install react-router-dom
