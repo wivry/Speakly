@@ -1,6 +1,7 @@
 import React from "react";
 import AudioAnalyser from "./lib/AudioAnalyser";
 import AudioWaveform from "./AudioWaveform";
+import SurferRecorder from "./SurferRecorder";
 
 const MAX_RECORDINGS = 10; // maximální množství nahrávek
 const MAX_RECORD_TIME = 60; // maximální čas jedné nahrávky v sekundách
@@ -121,6 +122,7 @@ class RecordVoice extends React.Component {
     };
     return (
       <React.Fragment>
+        <SurferRecorder />
         <AudioAnalyser {...audioProps}>
           <div className="row">
             <div className="col-4" />
