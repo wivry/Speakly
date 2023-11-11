@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { url_sentence } from "./url_sredemo";
 
-function Sentence() {
+function Sentence(props) {
   const [randomSentence, setRandomSentence] = useState("");
 
   // Vytvořte funkci pro načtení náhodné věty z Django pohledu
@@ -11,6 +11,7 @@ function Sentence() {
       if (response.ok) {
         const data = await response.json();
         setRandomSentence(data.sentence);
+        props.currentSentence(data.sentence);
       } else {
         console.error("Chyba při načítání náhodné věty.");
         setRandomSentence("Chyba při načítání náhodné věty...");
@@ -31,7 +32,7 @@ function Sentence() {
         <div className="col-4">
           <div className="ms-2">Read following sentence:</div>
         </div>
-        <dic className="col-6" />
+        <div className="col-6" />
         <div className="col-2">
           <button
             className="btn btn-sm shadow-lg btn-primary custom-rounded mr-3"

@@ -2,6 +2,7 @@ import React from "react";
 import AudioAnalyser from "./lib/AudioAnalyser";
 import AudioWaveform from "./AudioWaveform";
 import SurferRecorder from "./SurferRecorder";
+import Sentence from "./Sentence";
 
 const MAX_RECORDINGS = 10; // maximální množství nahrávek
 
@@ -16,6 +17,8 @@ class RecordVoice extends React.Component {
     isLoading: false,
     isRecording: false,
     recordings: [], // zde jsou uložené nahrávky
+    sentenceRecorded: [], // věty
+    currentSentence: "",
     selectedAudio: 0, // index nahrávky, kterou uživatel zvolil (0 = žádná nahrávka)
     status: "",
   };
@@ -43,6 +46,8 @@ class RecordVoice extends React.Component {
       isRecording: false,
       recordings: [],
       selectedAudio: 0,
+      currentSentence: "",
+      sentenceRecorded: [],
     });
   };
 
@@ -50,9 +55,14 @@ class RecordVoice extends React.Component {
   deleteAudio = (index) => {
     if (!this.state.isLoading || !this.state.isRecording) {
       // pouze pokud recorder neběží
+      //update listu s nahrávkamai
       const updatedRecordings = [...this.state.recordings];
       updatedRecordings.splice(index, 1);
       this.setState({ recordings: updatedRecordings });
+      //update listu s nahranými větami
+      const updatedSentences = [...this.state.sentenceRecorded];
+      updatedSentences.splice(index, 1);
+      this.setState({ sentenceRecorded: updatedSentences });
     }
   };
 
@@ -60,7 +70,11 @@ class RecordVoice extends React.Component {
   sendAudio = (index) => {
     if (!this.state.isLoading || !this.state.isRecording) {
       // pouze pokud recorder neběží
-      this.props.newRecordIsDone(index + 1, this.state.recordings[index]); // zde předá vyšší komponentě
+      this.props.newRecordIsDone(
+        index + 1,
+        this.state.recordings[index],
+        this.state.sentenceRecorded[index]
+      ); // zde předá vyšší komponentě
       this.setState({ selectedAudio: index + 1 });
     }
   };
@@ -70,7 +84,16 @@ class RecordVoice extends React.Component {
       this.controlAudio("recording");
     } else {
       this.controlAudio("inactive");
+      this.setState({
+        sentenceRecorded: this.state.sentenceRecorded.concat(
+          this.state.currentSentence
+        ),
+      });
     }
+  };
+
+  handleSentence = (sentence) => {
+    this.setState({ currentSentence: sentence });
   };
 
   // vykreslení komponenty
@@ -93,7 +116,10 @@ class RecordVoice extends React.Component {
       timeslice: 1000, // timeslice（https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder/start#Parameters）
       startCallback: (e) => {
         this.props.newRecordIsDone(false);
-        this.setState({ isLoading: false, isRecording: true });
+        this.setState({
+          isLoading: false,
+          isRecording: true,
+        });
         console.log("succ start", e);
         // nastavení časovače pro automatické vypnutí nahrávání po  MAX_RECORD_TIME s
       },
@@ -125,6 +151,7 @@ class RecordVoice extends React.Component {
     };
     return (
       <React.Fragment>
+        <Sentence currentSentence={this.handleSentence} />
         <SurferRecorder
           disabled={isLoading || recordings.length >= MAX_RECORDINGS}
           recordButtonPressed={this.recordButtonPressed}

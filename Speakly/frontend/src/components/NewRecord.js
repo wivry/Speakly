@@ -1,7 +1,6 @@
 import RecordVoice from "./RecordVoice";
 import AddPerson from "./AddPerson";
 import { url_api } from "./url_sredemo";
-import Sentence from "./Sentence";
 
 import React, { useState, useEffect } from "react";
 
@@ -13,6 +12,7 @@ function NewRecord(props) {
   const [personFailed, setPersonFailed] = useState(false); // nastaveno do true po neúspěšném přidání osoby do databáze
   const [personUploading, setPersonUploading] = useState(false); // nastaveno do true po uploadovaní na server
   const [selectedRecordings, setSelectedRecordings] = useState([]); // URL vybrané nahrávky k odeslání
+  const [selectedSentences, setSelectedSentences] = useState([]); // URL vybrané nahrávky k odeslání
   const [uploadRecordsID, setUploadRecordsID] = useState(""); // ID zápisu v databázi, které vrátí server
 
   const recordVoiceRef = React.createRef(); // reference na volání resetu
@@ -23,9 +23,11 @@ function NewRecord(props) {
   };
 
   // tlačítko Select zmáčknuto - vibírá se jaká nahrávka bude odeslaná
-  const buttonPressedSelect = (index, rec) => {
+  const buttonPressedSelect = (index, rec, sentence) => {
     setShowAddPerson(index); // 0 = žádná nahravka, číslo = index nahrávky
     setSelectedRecordings(rec);
+    setSelectedSentences(sentence);
+    console.log(sentence);
   };
 
   const uploadRecording = async (nameDetails, blobUrl) => {
@@ -43,6 +45,7 @@ function NewRecord(props) {
       formData.append("gender", nameDetails.gender);
       formData.append("age", nameDetails.age);
       formData.append("record_number", showAddPerson);
+      formData.append("recorded_setence", selectedSentences);
       formData.append("recorded_file", new File([blob], "recording.wav"));
       // příprava formátu zprávy s odesílanými daty
       const requestOptions = {
@@ -109,8 +112,6 @@ function NewRecord(props) {
               <h4>Make a new record of a person</h4>
             </div>
           </div>
-
-          <Sentence />
 
           <div>
             <RecordVoice

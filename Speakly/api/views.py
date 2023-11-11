@@ -51,11 +51,12 @@ class CreateRecordView(APIView):
             age = serializer.validated_data.get('age')
             record_number = serializer.validated_data.get('record_number')
             uploaded_file = serializer.validated_data.get('recorded_file')
+            uploaded_setence = serializer.validated_data.get('recorded_setence')
 
             if age == 0:
                 age = None
 
-            record = Record(name=name, location=location, gender=gender, age=age, record_number=record_number)
+            record = Record(name=name, location=location, gender=gender, age=age, record_number=record_number, recorded_setence=uploaded_setence)
 
             # Získání ID posledního vytvořeného záznamu
             try:
