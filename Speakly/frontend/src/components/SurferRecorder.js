@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import WaveSurfer from "wavesurfer.js";
 import RecordPlugin from "wavesurfer.js/dist/plugins/record";
 
+const MAX_RECORD_TIME = 60; // maximální čas jedné nahrávky v sekundách
+
 function SurferRecorder(props) {
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
@@ -16,13 +18,12 @@ function SurferRecorder(props) {
   ctx.fillStyle = progressGradient;
   ctx.fillRect(0, 0, canvas.width, canvasHeight);
 
-  const [isRecording, setIsRecording] = useState(false);
+  const [isRecording, setIsRecording] = useState();
   //const [durationEl, setDurationEl] = useState();
-  const [recordedUrl, setRecordedUrl] = useState();
   const containerRef = useRef();
   const [wavesurfer, setWavesurfer] = useState(null);
-  const [recorder, setRecorder] = useState(null);
-  const [currentTime, setCurrentTime] = useState(0);
+  const [recorderWS, setRecorderWS] = useState(null);
+  const [timer, setTimer] = useState(null);
 
   // Initialize wavesurfer when the container mounts
   // or any of the props change
@@ -44,11 +45,11 @@ function SurferRecorder(props) {
       container: containerRef.current,
     });
 
+    //const MediaRecorderOptions = { mimeType: "audio/wav" };
+
     // Initialize the Record plugin
-    const record = ws.registerPlugin(
-      RecordPlugin.create({ mimeType: MediaRecorderOptions["mimeType"] })
-    );
-    setRecorder(record);
+    const record = ws.registerPlugin(RecordPlugin.create());
+    setRecorderWS(record);
 
     setWavesurfer(ws);
 
@@ -62,13 +63,10 @@ function SurferRecorder(props) {
   useEffect(() => {
     if (!wavesurfer) return;
 
-    setCurrentTime(0);
-
     const subscriptions = [
-      wavesurfer.on("timeupdate", (currentTime) => setCurrentTime(currentTime)),
-      recorder.on("record-end", (blob) => {
-        setRecordedUrl(URL.createObjectURL(blob));
-      }),
+      //recorder.on("record-end", (blob) => {
+      //  setRecordedUrl(URL.createObjectURL(blob));
+      //}),
     ];
 
     return () => {
@@ -76,18 +74,34 @@ function SurferRecorder(props) {
     };
   }, [wavesurfer]);
 
-  const recordButton = () => {
+  function recordButton() {
     // Record button
-    if (recorder.isRecording()) {
-      recorder.stopRecording();
+    if (isRecording) {
+      clearTimeout(timer);
+      recorderWS.stopMic();
       setIsRecording(false);
+      if (props.recordButtonPressed) {
+        props.recordButtonPressed(false);
+      }
     } else {
-      //const deviceId = micSelect.value;
-      recorder.startRecording({ mimeType: "audio/wav" }).then(() => {
+      recorderWS.startMic().then(() => {
         setIsRecording(true);
+        if (props.recordButtonPressed) {
+          props.recordButtonPressed(true);
+        }
+
+        const timeout = setTimeout(() => {
+          console.log("timer stops");
+          recorderWS.stopMic();
+          setIsRecording(false);
+          if (props.recordButtonPressed) {
+            props.recordButtonPressed(false);
+          }
+        }, 1000 * MAX_RECORD_TIME);
+        setTimer(timeout);
       });
     }
-  };
+  }
 
   return (
     <div>
@@ -101,17 +115,14 @@ function SurferRecorder(props) {
         <button
           className={
             isRecording
-              ? "col-4 btn btn-lg shadow-lg btn-danger custom-rounded"
-              : "col-4 btn btn-lg shadow-lg btn-primary custom-rounded"
+              ? "col-4 btn btn-lg shadow-lg btn-danger custom-rounded mt-2"
+              : "col-4 btn btn-lg shadow-lg btn-primary custom-rounded mt-2"
           }
-          type="button"
           onClick={recordButton}
+          disabled={props.disabled}
         >
           {isRecording ? "Stop recording" : "Record"}
         </button>
-      </div>
-      <div className="row">
-        {recordedUrl ? <audio controls src={recordedUrl}></audio> : null}
       </div>
     </div>
   );

@@ -4,14 +4,11 @@ import AudioWaveform from "./AudioWaveform";
 import SurferRecorder from "./SurferRecorder";
 
 const MAX_RECORDINGS = 10; // maximální množství nahrávek
-const MAX_RECORD_TIME = 60; // maximální čas jedné nahrávky v sekundách
 
 // vlastní třída pro nahrávání
 class RecordVoice extends React.Component {
   constructor(props) {
     super(props);
-    this.props.newRecordIsDone(false);
-    this.timeout = null; // Inicializace proměnné timeout v rámci třídy
   }
 
   // výchozí stavy dané komponenty
@@ -24,7 +21,9 @@ class RecordVoice extends React.Component {
   };
 
   // stav pro analyser
-  componentDidMount() {}
+  componentDidMount() {
+    this.props.newRecordIsDone(false);
+  }
 
   componentWillUnmount() {}
 
@@ -66,6 +65,14 @@ class RecordVoice extends React.Component {
     }
   };
 
+  recordButtonPressed = (state) => {
+    if (state) {
+      this.controlAudio("recording");
+    } else {
+      this.controlAudio("inactive");
+    }
+  };
+
   // vykreslení komponenty
   render() {
     const { isLoading, isRecording, recordings } = this.state;
@@ -75,10 +82,11 @@ class RecordVoice extends React.Component {
       audioType: "audio/wav",
       //audioOptions: { sampleRate: 16000 },
       backgroundColor: "rgba(255, 255, 255, 255)",
-      strokeColor: "#000000",
+      strokeColor: "#00000000",
       className: "audioConteiner",
       //width: this.state.width,
-      width: 400,
+      width: 1,
+      height: 1,
       audioBitsPerSecond: 128000,
       status,
       audioSrc,
@@ -88,16 +96,11 @@ class RecordVoice extends React.Component {
         this.setState({ isLoading: false, isRecording: true });
         console.log("succ start", e);
         // nastavení časovače pro automatické vypnutí nahrávání po  MAX_RECORD_TIME s
-        this.timeout = setTimeout(() => {
-          this.controlAudio("inactive");
-        }, 1000 * MAX_RECORD_TIME);
       },
       pauseCallback: (e) => {
         console.log("succ pause", e);
       },
       stopCallback: (e) => {
-        // Zrušení timeoutu, pokud uživatel stopne nahrávání dřiv, než uplyne  MAX_RECORD_TIME s
-        clearTimeout(this.timeout);
         // uložení stavů nahrávání
         this.setState({
           isLoading: false,
@@ -122,31 +125,11 @@ class RecordVoice extends React.Component {
     };
     return (
       <React.Fragment>
-        <SurferRecorder />
-        <AudioAnalyser {...audioProps}>
-          <div className="row">
-            <div className="col-4" />
-
-            {status !== "recording" && (
-              <button
-                className="col-4 btn btn-lg shadow-lg btn-primary custom-rounded "
-                onClick={() => this.controlAudio("recording")}
-                disabled={isLoading || recordings.length >= MAX_RECORDINGS}
-              >
-                Record
-              </button>
-            )}
-            {status === "recording" && (
-              <button
-                className="col-4 btn btn-lg shadow-lg btn-danger custom-rounded "
-                onClick={() => this.controlAudio("inactive")}
-                disabled={isLoading || recordings.length >= MAX_RECORDINGS}
-              >
-                Stop recording
-              </button>
-            )}
-          </div>
-        </AudioAnalyser>
+        <SurferRecorder
+          disabled={isLoading || recordings.length >= MAX_RECORDINGS}
+          recordButtonPressed={this.recordButtonPressed}
+        />
+        <AudioAnalyser {...audioProps}></AudioAnalyser>
 
         <div className="row mb-1">
           <ul
