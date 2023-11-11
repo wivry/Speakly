@@ -109,9 +109,8 @@ function NewRecord(props) {
               <h4>Make a new record of a person</h4>
             </div>
           </div>
-          <div className="row">
-            <Sentence />
-          </div>
+
+          <Sentence />
 
           <div>
             <RecordVoice

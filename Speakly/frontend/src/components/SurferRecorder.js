@@ -106,7 +106,7 @@ function SurferRecorder(props) {
   return (
     <div>
       <div
-        className="custom-rounded shadow-lg ms-2"
+        className="custom-rounded shadow-lg"
         ref={containerRef}
         id="waveform-record"
       ></div>

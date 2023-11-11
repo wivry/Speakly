@@ -84,3 +84,8 @@ code {
 .duration {
   right: 5px; /* Vpravo na konci komponentu */
 }
+
+.container-sentence {
+  padding-left: 10;
+  padding-right: 10;
+}
