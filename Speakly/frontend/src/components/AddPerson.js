@@ -59,7 +59,9 @@ function AddPerson(props) {
               id="name-field"
               placeholder="Adam"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) =>
+                setName(e.target.value.length < 49 ? e.target.value : name)
+              }
             />
             <label htmlFor="name-field">Name (or nickname):</label>
           </div>
@@ -76,7 +78,11 @@ function AddPerson(props) {
               id="location-field"
               placeholder="Prague"
               value={location}
-              onChange={(e) => setLocation(e.target.value)}
+              onChange={(e) =>
+                setLocation(
+                  e.target.value.length < 49 ? e.target.value : location
+                )
+              }
             />
             <label htmlFor="lastname-field">Place of birth:</label>
           </div>
@@ -110,7 +116,9 @@ function AddPerson(props) {
               id="age-field"
               placeholder="10"
               value={age}
-              onChange={(e) => setAge(e.target.value)}
+              onChange={(e) =>
+                setAge(e.target.value < 140 ? e.target.value : age)
+              }
             />
             <label htmlFor="age-field">Age:</label>
           </div>
