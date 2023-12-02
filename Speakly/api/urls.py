@@ -16,10 +16,11 @@ Including another URLconf
 """
 
 from django.urls import path
-from .views import RecordView, CreateRecordView, RandomSentenceView
+from .views import RecordView, CreateRecordView, AnalyzeRecordView, RandomSentenceView
 
 urlpatterns = [
     path('record', RecordView.as_view()),
     path('create-record', CreateRecordView.as_view()),
+    path('analyze-record', AnalyzeRecordView.as_view()),
     path('RandomSentence', RandomSentenceView, name='RandomSentenceView'),
 ]

@@ -4,10 +4,10 @@ import AudioWaveform from "./AudioWaveform";
 import SurferRecorder from "./SurferRecorder";
 import Sentence from "./Sentence";
 
-const MAX_RECORDINGS = 10; // maximální množství nahrávek
+const MAX_RECORDINGS = 3; // maximální množství nahrávek
 
 // vlastní třída pro nahrávání
-class RecordVoice extends React.Component {
+class RecordForAnalyze extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -25,7 +25,7 @@ class RecordVoice extends React.Component {
 
   // stav pro analyser
   componentDidMount() {
-    this.props.newRecordIsDone(false);
+    //this.props.newRecordIsDone(false);
   }
 
   componentWillUnmount() {}
@@ -74,27 +74,6 @@ class RecordVoice extends React.Component {
     }
   };
 
-  // předá index zvolené nahravky do vyšší komponenty
-  sendAudio = (index) => {
-    if (!this.state.isLoading || !this.state.isRecording) {
-      // pouze pokud recorder neběží
-      const updatedList = this.state.selectedList.slice(); // Vytvoření kopie seznamu
-      if (updatedList[index]) {
-        updatedList[index] = 0;
-      } else {
-        updatedList[index] = 1;
-      }
-
-      this.setState({ selectedList: updatedList });
-
-      this.props.newRecordIsDone(
-        updatedList,
-        this.state.recordings,
-        this.state.sentenceRecorded
-      ); // zde předá vyšší komponentě
-    }
-  };
-
   recordButtonPressed = (state) => {
     if (state) {
       this.controlAudio("recording");
@@ -105,6 +84,19 @@ class RecordVoice extends React.Component {
           this.state.currentSentence
         ),
       });
+    }
+  };
+
+  // předá index zvolené nahravky do vyšší komponenty
+  analyzeAudio = (index) => {
+    if (!this.state.isLoading || !this.state.isRecording) {
+      // pouze pokud recorder neběží
+      const updatedList = this.state.selectedList.slice(); // Vytvoření kopie seznamu
+      updatedList[index] = 1;
+
+      this.setState({ selectedList: updatedList });
+
+      this.props.newRecordIsDone(index, this.state.recordings[index]); // zde předá vyšší komponentě
     }
   };
 
@@ -138,7 +130,7 @@ class RecordVoice extends React.Component {
       audioSrc,
       timeslice: 1000, // timeslice（https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder/start#Parameters）
       startCallback: (e) => {
-        this.props.newRecordIsDone(false);
+        //this.props.newRecordIsDone(false);
         this.setState({
           isLoading: false,
           isRecording: true,
@@ -150,11 +142,7 @@ class RecordVoice extends React.Component {
         console.log("succ pause", e);
       },
       stopCallback: (e) => {
-        this.props.newRecordIsDone(
-          this.state.selectedList,
-          this.state.recordings,
-          this.state.sentenceRecorded
-        ); // zde předá vyšší komponentě
+        //this.props.newRecordIsDone(this.state.selectedList,this.state.recordings,this.state.sentenceRecorded); // zde předá vyšší komponentě
         // uložení stavů nahrávání
         this.setState({
           isLoading: false,
@@ -165,7 +153,7 @@ class RecordVoice extends React.Component {
         console.log("succ stop", e);
       },
       onRecordCallback: (e) => {
-        this.props.newRecordIsDone(false);
+        //this.props.newRecordIsDone(false);
         this.setState({
           isLoading: false,
           isRecording: true,
@@ -179,7 +167,7 @@ class RecordVoice extends React.Component {
     return (
       <React.Fragment>
         <Sentence
-          info={"Read the following sentence:"}
+          info={"Say anything you want, or read the following sentence:"}
           currentSentence={this.handleSentence}
         />
         <SurferRecorder
@@ -226,10 +214,12 @@ class RecordVoice extends React.Component {
                     type="button"
                     data-toggle="button"
                     aria-pressed="false"
-                    disabled={isLoading || isRecording}
-                    onClick={() => this.sendAudio(index)}
+                    disabled={
+                      isLoading || isRecording || this.state.selectedList[index]
+                    }
+                    onClick={() => this.analyzeAudio(index)}
                   >
-                    Select
+                    Analyze
                   </button>
                 </div>
               </li>
@@ -249,4 +239,4 @@ class RecordVoice extends React.Component {
   }
 }
 
-export default RecordVoice;
+export default RecordForAnalyze;

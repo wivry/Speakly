@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import GoTo from "./GoTo";
 import Footer from "./footer";
+import NewAnalyze from "./NewAnalyze";
 import { url_basename, url_pageAddRecord } from "./url_sredemo";
 
 // komponent vykreslující stránku pro analýzu řečníka
@@ -20,13 +21,7 @@ function AnalyzePage() {
             blue: false,
           }}
         />
-        <GoTo
-          GoToPage={{
-            name: "Add a New Recording To The Database",
-            href: url_pageAddRecord,
-            blue: false,
-          }}
-        />
+        <NewAnalyze />
       </div>
       <Footer />
     </div>

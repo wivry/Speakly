@@ -29,10 +29,10 @@ function Sentence(props) {
   return (
     <div className="">
       <div className="row">
-        <div className="col-4">
-          <div className="ms-2">Read following sentence:</div>
+        <div className="col-8">
+          <div className="ms-2">{props.info}</div>
         </div>
-        <div className="col-6" />
+        <div className="col-2" />
         <div className="col-2">
           <button
             className="btn btn-sm shadow-lg btn-primary custom-rounded mr-3"

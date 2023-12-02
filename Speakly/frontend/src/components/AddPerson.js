@@ -128,7 +128,11 @@ function AddPerson(props) {
           className="col-3 btn btn-lg btn-primary shadow-lg custom-rounded mb-2 ms-5"
           onClick={buttonPressedSend}
         >
-          Send recording no. {props.showAddPerson}
+          {props.showAddPerson > 1 ? (
+            <span>Send {props.showAddPerson} recordings</span>
+          ) : (
+            <span>Send {props.showAddPerson} recording</span>
+          )}
         </button>
       </div>
 

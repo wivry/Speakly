@@ -1,18 +1,17 @@
 import RecordVoice from "./RecordVoice";
 import AddPerson from "./AddPerson";
-import { url_api } from "./url_sredemo";
-
+import { url_create_record } from "./url_sredemo";
 import React, { useState, useEffect } from "react";
 
 const ALERT_TIMER = 8; // doba zobrazení Alertu v sekundách
 
 function NewRecord(props) {
-  const [showAddPerson, setShowAddPerson] = useState(0); // 0 = žádná nahravka, číslo = index nahrávky
+  const [showAddPerson, setShowAddPerson] = useState(0); // 0 = žádná nahravka, číslo = počet zvolených nahrávek
   const [personAdded, setPersonAdded] = useState(false); // nastaveno do true po úspěšném přidání osoby do databáze
   const [personFailed, setPersonFailed] = useState(false); // nastaveno do true po neúspěšném přidání osoby do databáze
   const [personUploading, setPersonUploading] = useState(false); // nastaveno do true po uploadovaní na server
-  const [selectedRecordings, setSelectedRecordings] = useState([]); // URL vybrané nahrávky k odeslání
-  const [selectedSentences, setSelectedSentences] = useState([]); // URL vybrané nahrávky k odeslání
+  const [selectedRecordings, setSelectedRecordings] = useState([]); // URL vybraných nahrávek k odeslání
+  const [selectedSentences, setSelectedSentences] = useState([]); // věty vybraných nahrávek k odeslání
   const [uploadRecordsID, setUploadRecordsID] = useState(""); // ID zápisu v databázi, které vrátí server
 
   const recordVoiceRef = React.createRef(); // reference na volání resetu
@@ -22,22 +21,27 @@ function NewRecord(props) {
     recordVoiceRef.current.resetRecordVoice();
   };
 
-  // tlačítko Select zmáčknuto - vibírá se jaká nahrávka bude odeslaná
-  const buttonPressedSelect = (index, rec, sentence) => {
-    setShowAddPerson(index); // 0 = žádná nahravka, číslo = index nahrávky
-    setSelectedRecordings(rec);
-    setSelectedSentences(sentence);
-    console.log(sentence);
+  // tlačítko Select zmáčknuto - vibírá se jaké nahrávky budou odeslány
+  const buttonPressedSelect = (selectedList, allRecordings, allSentences) => {
+    // součet prvků v poli
+    let sum = 0;
+    let selRecordings = []; // obsahuje URL zvolených nahrávek
+    let selSentences = []; // obsahuje věty k daným nahrávkám
+    for (let i = 0; i < selectedList.length; i++) {
+      sum += selectedList[i];
+      if (selectedList[i]) {
+        selRecordings.push(allRecordings[i]);
+        selSentences.push(allSentences[i]);
+      }
+    }
+    setShowAddPerson(sum); // 0 = žádná nahravka, číslo = počet zvolených nahrávek
+    setSelectedRecordings(selRecordings);
+    setSelectedSentences(selSentences);
+    console.log(selRecordings);
   };
 
-  const uploadRecording = async (nameDetails, blobUrl) => {
+  const uploadRecording = async (nameDetails) => {
     try {
-      // vytvoření blobu obsahující nahrávku z URL blobu
-      const responseBlob = await fetch(blobUrl);
-      if (!responseBlob.ok) {
-        throw new Error("Nahrávání blobu z blobURL selhalo"); // pokud nelze vytvořit blob - error
-      }
-      const blob = await responseBlob.blob();
       // příprava odesílaných dat do proměnné formData
       const formData = new FormData();
       formData.append("name", nameDetails.name);
@@ -45,17 +49,32 @@ function NewRecord(props) {
       formData.append("gender", nameDetails.gender);
       formData.append("age", nameDetails.age);
       formData.append("record_number", showAddPerson);
-      formData.append("recorded_setence", selectedSentences);
-      formData.append("recorded_file", new File([blob], "recording.wav"));
+      // pro každou zvolenou nahrávku je třeba nahrávku vložit jako audio soubor do formData
+      for (let i = 0; i < selectedRecordings.length; i++) {
+        // vytvoření blobu obsahující nahrávku z URL blobu
+        const responseBlob = await fetch(selectedRecordings[i]);
+        if (!responseBlob.ok) {
+          throw new Error("Nahrávání blobu z blobURL selhalo"); // pokud nelze vytvořit blob - error
+        }
+        const blob = await responseBlob.blob();
+        const fileField = `recorded_file_${i}`;
+        const sentenceField = `recorded_sentence_${i}`;
+        const fileName = `recording_${i}.wav`;
+        // přidání nahrávky do formData
+        formData.append(fileField, new File([blob], fileName));
+        // přidání věty k nahrávce do formData
+        formData.append(sentenceField, selectedSentences[i]);
+      }
+
       // příprava formátu zprávy s odesílanými daty
       const requestOptions = {
         method: "POST",
-        body: formData,
+        body: formData, // toto obsahuje veškeré odesílané informace
       };
 
       try {
         // odesílání nahrávky na api serveru
-        const response = await fetch(url_api, requestOptions);
+        const response = await fetch(url_create_record, requestOptions);
         if (response.status === 201) {
           // pokud zápis do databáze byl vytvořen
           const data = await response.json();
@@ -68,7 +87,7 @@ function NewRecord(props) {
           // Zpracování chyby v databázi
           setPersonUploading(false); // po uploadu není třeba dále zobrazovat info, že se uploaduje
           setPersonFailed(true); // alert, že se nepovedlo nahrát soubor
-          throw new Error("Ukládání do databáze selhalo");
+          throw new Error("Ukládání do databáze selhalo", response.status);
         }
       } catch (error) {
         // Chyba komunikace
@@ -87,7 +106,7 @@ function NewRecord(props) {
     // tady se přidá do databáze a až databáze potvrdí, že přijala, tak:
     setPersonUploading(true); // alert, že nyní se uploaduje
     setShowAddPerson(0); // již není třeba zobrazovat rozhraní pro přidání do databáze
-    uploadRecording(nameDetails, selectedRecordings);
+    uploadRecording(nameDetails);
   };
 
   // při změně personAdded je volán tento effect, který zobrazí na 8s alert se statusem přidání nahrávky
