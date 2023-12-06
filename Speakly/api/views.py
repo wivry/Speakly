@@ -23,6 +23,10 @@ class RecordView(generics.ListAPIView):
     queryset = Record.objects.all()
     serializer_class = RecordSerializer
 
+class AnalysisView(generics.ListAPIView):
+    queryset = Analysis.objects.all()
+    serializer_class = AnalyzeRecordSerializer
+
 # funkce, která vrací náhodnou větu do rozhraní na nahrávání do databáze
 def RandomSentenceView(request):
     sentences_file_path = finders.find('data/sentences')
@@ -59,6 +63,23 @@ class AnalyzeRecordView(APIView):
             analysis.file_to_analyze.save(analyzing_spkr_id+".wav", uploaded_file)
             # Uložení záznamu
             analysis.save()
+
+            ## provedení analýzy
+            # spkr_id = kaldiAnalize()  # doplnit
+            #try:
+            #    subprocess.run(["/cesta/k/bash_skriptu.sh"])  # Změňte "/cesta/k/bash_skriptu.sh" na skutečnou cestu ke skriptu
+            #except FileNotFoundError:
+            #    print("Soubor nebyl nalezen.")
+            #except subprocess.CalledProcessError as e:
+            #    print(f"Proces skončil s chybou: {e}")
+            # analysis.spkr_id = spkr_id
+            ## konec analýzy
+
+            # Vyhledání všech záznamů v modelu Analysis, které obsahují zadaný spkr_id
+            analysis_records_to_delete = Analysis.objects.filter(analyzing_spkr_id__contains=analyzing_spkr_id)
+            # Smazání nalezených záznamů
+            analysis_records_to_delete.delete()
+            
             return JsonResponse({'spkr_id': "TEST00000"}, status=200)
         # pokud požadavek není validní:
         return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST) #pokud není validní
