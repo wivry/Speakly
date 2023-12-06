@@ -56,7 +56,7 @@ class AnalyzeRecordView(APIView):
             analysis.analyzing_spkr_id = analyzing_spkr_id
             uploaded_file = serializer.validated_data.get('file_to_analyze')
             # uložení přijatého souboru do složky analysis
-            analysis.file_to_analyze.save(analyzing_spkr_id, uploaded_file)
+            analysis.file_to_analyze.save(analyzing_spkr_id+".wav", uploaded_file)
             # Uložení záznamu
             analysis.save()
             return JsonResponse({'spkr_id': "TEST00000"}, status=200)

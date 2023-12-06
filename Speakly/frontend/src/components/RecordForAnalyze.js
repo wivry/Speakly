@@ -118,14 +118,14 @@ class RecordForAnalyze extends React.Component {
     const audioProps = {
       mimeType: "audio/wav",
       audioType: "audio/wav",
-      //audioOptions: { sampleRate: 16000 },
+      audioOptions: { sampleRate: 16000 }, // musí být fs nastaveno, jinak to nefunguje
       backgroundColor: "rgba(255, 255, 255, 255)",
       strokeColor: "#00000000",
       className: "audioConteiner",
       //width: this.state.width,
       width: 1,
       height: 1,
-      audioBitsPerSecond: 128000,
+      audioBitsPerSecond: 256000, // 16000 * 16 - pro jistotu
       status,
       audioSrc,
       timeslice: 1000, // timeslice（https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder/start#Parameters）

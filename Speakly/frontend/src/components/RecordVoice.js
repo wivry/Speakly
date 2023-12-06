@@ -1,7 +1,7 @@
 import React from "react";
-import AudioAnalyser from "./lib/AudioAnalyser";
-import AudioWaveform from "./AudioWaveform";
-import SurferRecorder from "./SurferRecorder";
+import AudioAnalyser from "./lib/AudioAnalyser"; // nahrávání zvuku
+import AudioWaveform from "./AudioWaveform"; // pro zobrazení a přehrávání audio stop
+import SurferRecorder from "./SurferRecorder"; // pro zobrazení právě nahrávaného zvuku
 import Sentence from "./Sentence";
 
 const MAX_RECORDINGS = 10; // maximální množství nahrávek
@@ -126,14 +126,14 @@ class RecordVoice extends React.Component {
     const audioProps = {
       mimeType: "audio/wav",
       audioType: "audio/wav",
-      //audioOptions: { sampleRate: 16000 },
+      audioOptions: { sampleRate: 16000 }, // musí být nastavená fs, jiank to nefunguje
       backgroundColor: "rgba(255, 255, 255, 255)",
       strokeColor: "#00000000",
       className: "audioConteiner",
       //width: this.state.width,
       width: 1,
       height: 1,
-      audioBitsPerSecond: 128000,
+      audioBitsPerSecond: 256000, // 160000 * 16 - pro jistotu
       status,
       audioSrc,
       timeslice: 1000, // timeslice（https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder/start#Parameters）
