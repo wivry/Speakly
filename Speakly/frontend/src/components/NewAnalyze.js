@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
-import RecordForAnalyze from "./RecordForAnalyze";
+import RecordVoice from "./RecordVoice";
+import AnalyzePerson from "./AnalyzePerson";
 import { url_analyze_record } from "./url_sredemo";
 
 function NewAnalyze(props) {
-  const [showAddPerson, setShowAddPerson] = useState(0); // 0 = žádná nahravka, číslo = poslední analyzovaná nahrávka
-  const [fileAnalyzed, setFileAnalyzed] = useState(0); // nastaveno do true po úspěšném analyzování osoby
-  // 1 - nalezena shoda, 2 - nenalezena shoda
+  const [showAnalyzePerson, setShowAnalyzePerson] = useState(0); // 0 = žádná nahravka, číslo = poslední analyzovaná nahrávka
+  const [fileAnalyzed, setFileAnalyzed] = useState(0); // nastaveno do true po úspěšném analyzování osoby // 1 - nalezena shoda, 2 - nenalezena shoda
   const [analyzingFailed, setAnalyzingFailed] = useState(false); // nastaveno do true po chybě při analyzování
   const [fileIsAnalyzing, setFileIsAnalyzing] = useState(false); // nastaveno do true při uploadovaní na server / analyzování
-  const [recordingToAnalyze, setRecordingToAnalyze] = useState([]); // URL vybrané nahrávky k analyzování
+  const [selectedRecordings, setSelectedRecordings] = useState([]); // URL vybraných nahrávek k odeslání
+  const [selectedSentences, setSelectedSentences] = useState([]); // věty vybraných nahrávek k odeslání
   const [uploadRecordsID, setUploadRecordsID] = useState(""); // ID zápisu v databázi, které vrátí server
 
   const recordVoiceRef = React.createRef(); // reference na volání resetu
@@ -18,18 +19,28 @@ function NewAnalyze(props) {
     recordVoiceRef.current.resetRecordVoice();
   };
 
-  const uploadRecording = async (Recording) => {
+  const uploadRecording = async (analyzeDetails) => {
     try {
       // příprava odesílaných dat do proměnné formData
       const formData = new FormData();
-      // vytvoření blobu obsahující nahrávku z URL blobu
-      const responseBlob = await fetch(Recording);
-      if (!responseBlob.ok) {
-        throw new Error("Nahrávání blobu z blobURL selhalo"); // pokud nelze vytvořit blob - error
+      formData.append("method", analyzeDetails.method);
+      formData.append("record_number", showAnalyzePerson);
+      // pro každou zvolenou nahrávku je třeba nahrávku vložit jako audio soubor do formData
+      for (let i = 0; i < selectedRecordings.length; i++) {
+        // vytvoření blobu obsahující nahrávku z URL blobu
+        const responseBlob = await fetch(selectedRecordings[i]);
+        if (!responseBlob.ok) {
+          throw new Error("Nahrávání blobu z blobURL selhalo"); // pokud nelze vytvořit blob - error
+        }
+        const blob = await responseBlob.blob();
+        const fileField = `file_to_analyze_${i}`;
+        const sentenceField = `recorded_sentence_${i}`;
+        const fileName = `recording_${i}.wav`;
+        // přidání nahrávky do formData
+        formData.append(fileField, new File([blob], fileName));
+        // přidání věty k nahrávce do formData
+        formData.append(sentenceField, selectedSentences[i]);
       }
-      const blob = await responseBlob.blob();
-      // přidání nahrávky do formData
-      formData.append("file_to_analyze", new File([blob], "recording.wav"));
 
       // příprava formátu zprávy s odesílanými daty
       const requestOptions = {
@@ -76,14 +87,32 @@ function NewAnalyze(props) {
   };
 
   // tlačítko Analyze zmáčknuto - vibírá se jaké nahrávky budou odeslány
-  const buttonPressedAnalyze = (index, Recording) => {
-    setShowAddPerson(index + 1); // 0 = žádná nahravka, číslo = poslední analyzovaná nahrávka
-    setRecordingToAnalyze(Recording);
+  const buttonPressedAnalyze = (analyzeDetails) => {
     setFileAnalyzed(0); // vysledek z předchozí analýzy schovat
     setFileIsAnalyzing(true); // alert, že nyní se uploaduje
-    //setShowAddPerson(0); // již není třeba zobrazovat rozhraní pro přidání do databáze
-    uploadRecording(Recording);
+    setShowAnalyzePerson(0); // již není třeba zobrazovat rozhraní pro přidání do databáze
+    uploadRecording(analyzeDetails);
   };
+
+  // tlačítko Select zmáčknuto - vibírá se jaké nahrávky budou odeslány
+  const buttonPressedSelect = (selectedList, allRecordings, allSentences) => {
+    // součet prvků v poli
+    let sum = 0;
+    let selRecordings = []; // obsahuje URL zvolených nahrávek
+    let selSentences = []; // obsahuje věty k daným nahrávkám
+    for (let i = 0; i < selectedList.length; i++) {
+      sum += selectedList[i];
+      if (selectedList[i]) {
+        selRecordings.push(allRecordings[i]);
+        selSentences.push(allSentences[i]);
+      }
+    }
+    setShowAnalyzePerson(sum); // 0 = žádná nahravka, číslo = počet zvolených nahrávek
+    setSelectedRecordings(selRecordings);
+    setSelectedSentences(selSentences);
+    console.log(selRecordings);
+  };
+
   // vykreslení komponenty
   return (
     <div>
@@ -96,13 +125,25 @@ function NewAnalyze(props) {
           </div>
 
           <div>
-            <RecordForAnalyze
-              newRecordIsDone={buttonPressedAnalyze}
+            <RecordVoice
+              newRecordIsDone={buttonPressedSelect}
               ref={recordVoiceRef}
+              info={"Say anything you want, or read the following sentence:"}
             />{" "}
           </div>
         </div>
       </div>
+
+      {showAnalyzePerson ? (
+        <div className="mt-3">
+          <AnalyzePerson
+            AnalyzePersonInfo={buttonPressedAnalyze}
+            showAnalyzePerson={showAnalyzePerson}
+          />
+        </div>
+      ) : (
+        <div />
+      )}
 
       {fileIsAnalyzing && (
         <div

@@ -179,7 +179,7 @@ class RecordVoice extends React.Component {
     return (
       <React.Fragment>
         <Sentence
-          info={"Read the following sentence:"}
+          info={this.props.info}
           currentSentence={this.handleSentence}
         />
         <SurferRecorder
@@ -229,7 +229,7 @@ class RecordVoice extends React.Component {
                     disabled={isLoading || isRecording}
                     onClick={() => this.sendAudio(index)}
                   >
-                    Select
+                    {this.state.selectedList[index] ? "Selected" : "Select"}
                   </button>
                 </div>
               </li>

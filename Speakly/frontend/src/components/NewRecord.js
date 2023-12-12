@@ -128,7 +128,7 @@ function NewRecord(props) {
         <div className="shadow-lg custom-card">
           <div className="row">
             <div className=" d-flex align-items-center justify-content-center">
-              <h4>Make a new record of a person</h4>
+              <h4>Make a new enrollment of a person</h4>
             </div>
           </div>
 
@@ -136,6 +136,7 @@ function NewRecord(props) {
             <RecordVoice
               newRecordIsDone={buttonPressedSelect}
               ref={recordVoiceRef}
+              info={"Read the following sentence:"}
             />{" "}
           </div>
         </div>

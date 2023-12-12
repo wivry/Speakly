@@ -41,6 +41,14 @@ code {
 .custom-rounded-input {
   border-radius: 20px !important;
 }
+.custom-rounded-left {
+  border-top-left-radius: 20px !important;
+  border-bottom-left-radius: 20px !important;
+}
+.custom-rounded-right {
+  border-top-right-radius: 20px !important;
+  border-bottom-right-radius: 20px !important;
+}
 
 .custom-background {
   background-color: #e9ecef;

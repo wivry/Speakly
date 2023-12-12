@@ -156,6 +156,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Maximalni mozny pocet záznamů v databázi
 MAX_NUMBER_RECORD = 200
+MAX_NUMBER_ANALYSIS = 200
 
 # povolení měnění práv uložených souborů na skupinu sredemo
-CHGRP_SREDEMO = True    # pro aktivaci musí být True a DEBUG = False
+#### NEFUNGUJE - TŘEBA OPRAVIT
+CHGRP_SREDEMO = False    # pro aktivaci musí být True a DEBUG = False

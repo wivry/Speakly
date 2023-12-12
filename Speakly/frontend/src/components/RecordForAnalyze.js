@@ -74,19 +74,6 @@ class RecordForAnalyze extends React.Component {
     }
   };
 
-  recordButtonPressed = (state) => {
-    if (state) {
-      this.controlAudio("recording");
-    } else {
-      this.controlAudio("inactive");
-      this.setState({
-        sentenceRecorded: this.state.sentenceRecorded.concat(
-          this.state.currentSentence
-        ),
-      });
-    }
-  };
-
   // předá index zvolené nahravky do vyšší komponenty
   analyzeAudio = (index) => {
     if (!this.state.isLoading || !this.state.isRecording) {
@@ -97,6 +84,19 @@ class RecordForAnalyze extends React.Component {
       this.setState({ selectedList: updatedList });
 
       this.props.newRecordIsDone(index, this.state.recordings[index]); // zde předá vyšší komponentě
+    }
+  };
+
+  recordButtonPressed = (state) => {
+    if (state) {
+      this.controlAudio("recording");
+    } else {
+      this.controlAudio("inactive");
+      this.setState({
+        sentenceRecorded: this.state.sentenceRecorded.concat(
+          this.state.currentSentence
+        ),
+      });
     }
   };
 

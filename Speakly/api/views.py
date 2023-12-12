@@ -46,8 +46,10 @@ class AnalyzeRecordView(APIView):
         # Získání nahrávky z požadavku
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():         # nutno zkontrolovat vždy, zda jsou data validni
+            record_number = serializer.validated_data.get('record_number')
+            method = serializer.validated_data.get('method')
             # vytvoření nového záznamu
-            analysis = Analysis()
+            analysis = Analysis(record_number=record_number, method=method)
             # Získání ID posledního vytvořeného záznamu
             try:
                 latest_analysis = Analysis.objects.latest('id')
@@ -55,12 +57,34 @@ class AnalyzeRecordView(APIView):
             except ObjectDoesNotExist:
                 # pokud žádný záznam neexisstuje
                 analysis_id = 1
+
+            # kontrola poctu záznamu v databázi
+            if (analysis_id > settings.MAX_NUMBER_ANALYSIS):
+                return Response({'Database is full at the moment'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            analysis.save()
+
             # vytváření SPKR_ID
             analyzing_spkr_id = "ANSP" + f"{analysis_id:06d}"
             analysis.analyzing_spkr_id = analyzing_spkr_id
-            uploaded_file = serializer.validated_data.get('file_to_analyze')
-            # uložení přijatého souboru do složky analysis
-            analysis.file_to_analyze.save(analyzing_spkr_id+".wav", uploaded_file)
+            # postupné ukládání všech nahrávek a vět
+            for i in range(record_number):
+                # získání nahrávky z požadavku
+                uploaded_file = serializer.validated_data.get(f"file_to_analyze_{i}")
+                uploaded_sentence = serializer.validated_data.get(f"recorded_sentence_{i}")
+                # nazev audio souboru
+                file_name = analyzing_spkr_id + "_" + "FILE" + str(i) + "_" + str(method) + ".wav"
+                # Přiřazení nahrávky
+                file_field = getattr(analysis, f"file_to_analyze_{i}")
+                file_field.save(file_name, uploaded_file)
+                # přiřazení věty nahrávky
+                setattr(analysis, f"recorded_sentence_{i}", uploaded_sentence)
+                # každou větu do samostatného txt souboru
+                file_sen_name = f"FILE{i}_sentence.txt"
+                upload_path = os.path.join(settings.MEDIA_ROOT,'audio_files/test/', analyzing_spkr_id, file_sen_name) 
+                with open(upload_path, 'w') as file:
+                    file.write(uploaded_sentence)
+
             # Uložení záznamu
             analysis.save()
 
@@ -76,9 +100,9 @@ class AnalyzeRecordView(APIView):
             ## konec analýzy
 
             # Vyhledání všech záznamů v modelu Analysis, které obsahují zadaný spkr_id
-            analysis_records_to_delete = Analysis.objects.filter(analyzing_spkr_id__contains=analyzing_spkr_id)
+            #analysis_records_to_delete = Analysis.objects.filter(analyzing_spkr_id__contains=analyzing_spkr_id)
             # Smazání nalezených záznamů
-            analysis_records_to_delete.delete()
+            #analysis_records_to_delete.delete()
             
             return JsonResponse({'spkr_id': "TEST00000"}, status=200)
         # pokud požadavek není validní:
@@ -133,13 +157,13 @@ class CreateRecordView(APIView):
                 setattr(record, f"recorded_sentence_{i}", uploaded_sentence)
                 # každou větu do samostatného txt souboru
                 file_sen_name = f"FILE{i}_sentence.txt"
-                upload_path = os.path.join(settings.MEDIA_ROOT,'audio_files', spkr_id, file_sen_name) 
+                upload_path = os.path.join(settings.MEDIA_ROOT,'audio_files/enroll/', spkr_id, file_sen_name) 
                 with open(upload_path, 'w') as file:
                     file.write(uploaded_sentence)
 
             # změna práv uloženého souboru
             if (settings.DEBUG == False & settings.CHGRP_SREDEMO == True):
-                audio_file_path = "media/audio_files/" + file_name
+                audio_file_path = "media/audio_files/enroll/" + file_name
                 subprocess.call(["chgrp", "sredemo", audio_file_path])
                 os.chmod(audio_file_path, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH)
             
