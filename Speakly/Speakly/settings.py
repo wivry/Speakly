@@ -29,8 +29,8 @@ DEBUG = False
 
 #CORS_ALLOW_ALL_ORIGINS = True  # Not required, but convenient for testing
 
-ALLOWED_HOSTS = ['amagi.feld.cvut.cz', 'www.amagi.feld.cvut.cz', "127.0.0.1"]      # zde musí být URL stránky
-CORS_ALLOWED_ORIGINS = ["https://amagi.feld.cvut.cz", "https://www.amagi.feld.cvut.cz","https://127.0.0.1"]
+ALLOWED_HOSTS = ['aspeech.fel.cvut.cz', 'www.aspeech.fel.cvut.cz', "127.0.0.1"]      # zde musí být URL stránky
+CORS_ALLOWED_ORIGINS = ["https://aspeech.fel.cvut.cz", "https://www.aspeech.fel.cvut.cz","https://127.0.0.1"]
 
 
 # Application definition
@@ -131,8 +131,8 @@ if DEBUG:
     STATIC_URL = 'static/'
     MEDIA_URL = 'media/'
 else:
-    STATIC_URL = 'https://amagi.feld.cvut.cz/sredemo/static/'
-    MEDIA_URL = 'https://amagi.feld.cvut.cz/sredemo/media/'
+    STATIC_URL = 'https://aspeech.fel.cvut.cz/sredemo/static/'
+    MEDIA_URL = 'https://aspeech.fel.cvut.cz/sredemo/media/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
@@ -158,4 +158,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MAX_NUMBER_RECORD = 200
 
 # povolení měnění práv uložených souborů na skupinu sredemo
-CHGRP_SREDEMO = True    # pro aktivaci musí být True a DEBUG = False
+CHGRP_SREDEMO = False    # pro aktivaci musí být True a DEBUG = False
