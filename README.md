@@ -267,7 +267,6 @@ sudo apt-get install libapache2-mod-wsgi
 
 ```bash
 sudo a2enmod wsgi
-
 ```
 
 - V konfiguračním souboru Apache nutno nastavit wsgi a cestu k Django projektu na spouštění
@@ -327,3 +326,50 @@ WSGIDaemonProcess example.com lang='en_US.UTF-8' locale='en_US.UTF-8'
 ```
 
 See the Files section of the Unicode reference guide for details.
+
+## Metacentrum
+
+vavrim10@tarkil.metacentrum.cz
+/storage/projects/CTU_Speech_Lab/
+
+/data - cestina
+/scratch - tmp
+/tools - kaldi
+
+egs/sre16
+
+v1
+
+- stage = 0
+
+/workspace
+
+## poznámky do budoucnosti
+
+### Práva souborů
+
+Pomocí ACL (Access Control Lists): Můžete použít ACL k nastavení výchozích oprávnění pro určenou složku, takže nově vytvořené soubory budou automaticky mít požadovaná práva. Zde je příklad nastavení ACL:
+bash
+Copy code
+
+#### Nastavení výchozích ACL pro složku
+
+setfacl -d -m group:sredeno:rw- /cesta/k/slozce
+Toto nastavení udělí skupině sredeno práva pro čtení a zápis pro nově vytvořené soubory ve specifikované složce.
+
+Použití SGID bitu na složce: Nastavení SGID bitu na složce může způsobit, že nově vytvořené soubory v této složce převezmou skupinu rodičovské složky.
+bash
+Copy code
+
+#### Nastavení SGID bitu na složce
+
+chmod g+s /cesta/k/slozce
+Tímto způsobem vytvořené soubory budou mít stejnou skupinu jako složka, která má nastavený SGID bit.
+
+Tyto příkazy lze použít na úrovni příkazové řádky nebo je integrovat do skriptu v rámci vaší aplikace, aby se automaticky spouštěly při vytváření nových složek nebo souborů. Upozorňuji, že změna oprávnění a skupin může být citlivá operace, takže je důležité pečlivě zvážit její implementaci a její dopady na bezpečnost a chování aplikace.
+
+## Nový server Aspeech
+
+vavrinek@amagi.feld.cvut.cz -p 10868
+pswr: Vavrinek1
+ssh -i .\.ssh\key vavrinek@amagi.feld.cvut.cz -p 10868
