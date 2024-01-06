@@ -79,10 +79,11 @@ class AnalyzeRecordView(APIView):
                 file_field.save(file_name, uploaded_file)
                 # přiřazení věty nahrávky
                 setattr(analysis, f"recorded_sentence_{i}", uploaded_sentence)
+                analysis.save()
                 # každou větu do samostatného txt souboru
                 file_sen_name = f"FILE{i}_sentence.txt"
                 upload_path = os.path.join(settings.MEDIA_ROOT,'audio_files/test/', analyzing_spkr_id, file_sen_name) 
-                with open(upload_path, 'w') as file:
+                with open(upload_path, 'w', encoding='utf-8') as file:
                     file.write(uploaded_sentence)
 
             # Uložení záznamu
@@ -155,10 +156,11 @@ class CreateRecordView(APIView):
                 file_field.save(file_name, uploaded_file)
                 # přiřazení věty nahrávky
                 setattr(record, f"recorded_sentence_{i}", uploaded_sentence)
+                record.save()
                 # každou větu do samostatného txt souboru
                 file_sen_name = f"FILE{i}_sentence.txt"
                 upload_path = os.path.join(settings.MEDIA_ROOT,'audio_files/enroll/', spkr_id, file_sen_name) 
-                with open(upload_path, 'w') as file:
+                with open(upload_path, 'w', encoding='utf-8') as file:
                     file.write(uploaded_sentence)
 
             # změna práv uloženého souboru
