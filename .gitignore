@@ -1,5 +1,7 @@
 Speakly/media/
+Speakly/media_ln/
 
 Speakly/frontend/node_modules/
 
+kaldi_root
 myenv/
