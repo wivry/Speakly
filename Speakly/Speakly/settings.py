@@ -131,8 +131,8 @@ if DEBUG:
     STATIC_URL = 'static/'
     MEDIA_URL = 'media/'
 else:
-    STATIC_URL = 'https://noel.fel.cvut.cz/sredemo/static/'
-    MEDIA_URL = 'https://noel.fel.cvut.cz/sredemo/media/'
+    STATIC_URL = 'https://aspeech.fel.cvut.cz/sredemo/static/'
+    MEDIA_URL = 'https://aspeech.fel.cvut.cz/sredemo/media/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
