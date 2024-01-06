@@ -29,8 +29,8 @@ DEBUG = False
 
 #CORS_ALLOW_ALL_ORIGINS = True  # Not required, but convenient for testing
 
-ALLOWED_HOSTS = ['noel.fel.cvut.cz', 'www.noel.fel.cvut.cz', "127.0.0.1"]      # zde musí být URL stránky
-CORS_ALLOWED_ORIGINS = ["https://noel.fel.cvut.cz", "https://www.noel.fel.cvut.cz","https://127.0.0.1"]
+ALLOWED_HOSTS = ['aspeech.fel.cvut.cz', 'www.aspeech.fel.cvut.cz', "127.0.0.1"]      # zde musí být URL stránky
+CORS_ALLOWED_ORIGINS = ["https://aspeech.fel.cvut.cz", "https://www.aspeech.fel.cvut.cz","https://127.0.0.1"]
 
 
 # Application definition
